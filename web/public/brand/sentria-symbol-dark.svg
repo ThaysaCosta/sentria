@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SENTRIA"><title>SENTRIA</title><defs>
+<linearGradient id="snO" x1="8" y1="56" x2="56" y2="8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#3978D5"/><stop offset="1" stop-color="#6FA2EC"/></linearGradient>
+<linearGradient id="snI" x1="20" y1="44" x2="44" y2="20" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8C8BEA"/><stop offset="1" stop-color="#B9B8F7"/></linearGradient>
+<radialGradient id="snC" cx="32" cy="30" r="7" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#C9C8FA"/><stop offset="1" stop-color="#8C8BEA"/></radialGradient>
+</defs><path d="M54.55 23.79A24 24 0 1 1 36.17 8.36" fill="none" stroke="url(#snO)" stroke-width="4.6" stroke-linecap="round"/><path d="M19.78 36.45A13 13 0 1 1 29.74 44.8" fill="none" stroke="url(#snI)" stroke-width="4.6" stroke-linecap="round"/><circle cx="32" cy="32" r="5.2" fill="url(#snC)"/><circle cx="45.4" cy="11.8" r="3.3" fill="#8C8BEA"/><circle cx="23.64" cy="41.96" r="2.1" fill="#3978D5"/></svg>

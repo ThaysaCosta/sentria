@@ -1,0 +1,11 @@
+assunto;descricao;empresa;nome;email;canal;data
+Boleto não chegou;O boleto da mensalidade de novembro não foi enviado para o e-mail do financeiro.;Atlas Contabilidade;Renata Dias;renata@atlascontabil.com.br;email;03/11/2026 09:12
+Não consigo entrar no sistema;Desde hoje cedo aparece senha incorreta, mas tenho certeza que está certa. Já tentei redefinir.;Atlas Contabilidade;Paulo Nunes;paulo@atlascontabil.com.br;chat;03/11/2026 10:40
+API devolvendo erro 500;"Nossa integração com o ERP recebe erro 500 no endpoint de pedidos desde ontem; os pedidos não sincronizam.";Vetor Logística;Marcos Lima;marcos@vetorlog.com.br;email;04/11/2026 08:05
+Sistema muito lento;Todas as telas demoram mais de um minuto para abrir. A equipe inteira está parada!!;Vetor Logística;Aline Souza;aline@vetorlog.com.br;phone;04/11/2026 14:22
+Relatório com valores errados;O relatório de vendas soma valores diferentes do extrato. Conferimos manualmente.;Bússola Engenharia;Tiago Prado;tiago@bussolaeng.com.br;portal;05/11/2026 11:00
+Como exportar para Excel;Gostaria de saber como exportar a lista de clientes para uma planilha.;Bússola Engenharia;Clara Mendes;clara@bussolaeng.com.br;portal;05/11/2026 15:30
+Cobrança duplicada;Fomos cobrados duas vezes no cartão. Se continuar assim vamos cancelar o contrato.;Atlas Contabilidade;Renata Dias;renata@atlascontabil.com.br;email;06/11/2026 09:45
+Webhook duplicado;Cada evento de pagamento chega duas vezes no nosso servidor e gera lançamentos duplicados.;Vetor Logística;Marcos Lima;marcos@vetorlog.com.br;email;06/11/2026 16:10
+Código de verificação não chega;O SMS com o código de dois fatores não chega no meu celular.;Pomar Alimentos;Júlia Rocha;julia@pomaralimentos.com.br;whatsapp;07/11/2026 08:30
+Sugestão: modo escuro;Seria ótimo ter um modo escuro na interface. Obrigada!;Pomar Alimentos;Júlia Rocha;julia@pomaralimentos.com.br;portal;07/11/2026 17:00

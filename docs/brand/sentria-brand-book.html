@@ -1,0 +1,1153 @@
+<title>SENTRIA Brand Book</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: editorial brand book — alternating paper (#F5F7FB) and Midnight Navy chapters, 12-col content at 1200px, one "perception field" canvas motif recurring across cover, login and decks. Single committed look (brand colors are fixed, no theme swap). */
+:root{
+  color-scheme: light;
+  --navy:#14243B; --navy-2:#0D1829; --navy-3:#1D3150;
+  --blue:#3978D5; --blue-2:#2F66BA;
+  --lav:#8C8BEA; --lav-soft:#EEEEFC;
+  --soft:#DCE8F8; --bg:#F5F7FB; --white:#FFFFFF;
+  --muted:#64748B; --line:#E4E9F1;
+  --ok:#16A47A; --warn:#E6A23C; --crit:#D64550;
+  --ink:#14243B;
+  --f-display:"Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Inter", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r-card:14px; --r-btn:9px;
+  --shadow: 0 1px 2px rgba(20,36,59,.05), 0 8px 24px -12px rgba(20,36,59,.12);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.015em}
+p{margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(24px, env(safe-area-inset-left,0px));padding-right:max(24px, env(safe-area-inset-right,0px))}
+section{padding-block:96px}
+section.dark{background:var(--navy);color:#E8EEF8}
+section.dark .muted{color:#93A3BC}
+section.white{background:var(--white)}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);display:flex;gap:12px;align-items:center}
+.dark .eyebrow{color:var(--lav)}
+.eyebrow b{font-weight:500;color:var(--muted)}
+.dark .eyebrow b{color:#6F82A0}
+.sec-head{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:48px;align-items:end;margin-bottom:56px}
+.sec-head h2{font-size:clamp(30px,4vw,48px);line-height:1.08;font-weight:700;margin-top:14px}
+.sec-head p{font-size:16.5px;max-width:60ch}
+.mono{font-family:var(--f-mono)}
+.tab{font-variant-numeric:tabular-nums}
+
+/* ---------- COVER ---------- */
+.cover{position:relative;background:var(--navy-2);color:#fff;overflow:hidden;padding-block:0}
+.cover canvas{position:absolute;inset:0;width:100%;height:100%}
+.cover .inner{position:relative;min-height:min(820px, 100svh);display:flex;flex-direction:column;justify-content:space-between;padding-block:40px 48px}
+.cover-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#8FA2C2}
+.cover-main{display:flex;flex-direction:column;gap:28px;padding-block:80px}
+.cover-logo{display:flex;align-items:center;gap:clamp(16px,2.4vw,28px)}
+.cover-logo svg{width:clamp(72px,10vw,128px);height:auto}
+.cover-logo .wm{font-family:var(--f-display);font-weight:700;font-size:clamp(44px,8.4vw,112px);letter-spacing:.14em;line-height:1}
+.cover h1{font-size:clamp(24px,3.4vw,42px);font-weight:500;color:#C9D4E8;letter-spacing:-.01em}
+.cover h1 em{font-style:normal;color:#fff;font-weight:700}
+.cover-bottom{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap}
+.cover-bottom .tags{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;padding:6px 11px;border:1px solid rgba(140,139,234,.35);border-radius:999px;color:#C8CCF6;background:rgba(140,139,234,.08)}
+.cover-bottom .ver{font-size:13px;color:#7D90AE;text-align:right}
+
+/* ---------- CONCEPT ---------- */
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.pillar{background:var(--white);border:1px solid var(--line);border-radius:var(--r-card);padding:28px;display:flex;flex-direction:column;gap:14px}
+.pillar .glyph{width:44px;height:44px}
+.pillar h3{font-size:22px;font-weight:700}
+.pillar .pt{font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
+.positioning{margin-top:56px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+.statement{background:var(--navy);color:#fff;border-radius:var(--r-card);padding:36px;display:flex;flex-direction:column;gap:18px;justify-content:space-between;position:relative;overflow:hidden}
+.statement canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.9}
+.statement > *{position:relative}
+.statement q{font-family:var(--f-display);font-size:clamp(22px,2.6vw,30px);font-weight:600;line-height:1.25;quotes:none}
+.persona{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.persona div{background:var(--white);padding:18px 20px}
+.persona b{font-family:var(--f-display);display:block;font-size:15px;margin-bottom:2px}
+.persona span{font-size:13.5px;color:var(--muted);line-height:1.45;display:block}
+
+/* ---------- LOGO ---------- */
+.logo-stage{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:20px}
+.construct{background:var(--navy-2);border-radius:var(--r-card);aspect-ratio:1/1;max-width:100%;display:grid;place-items:center;position:relative;overflow:hidden}
+.construct svg{width:78%;height:auto}
+.anatomy{display:flex;flex-direction:column;gap:12px}
+.anat{display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;align-items:start;padding:18px 20px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.03)}
+.anat .k{font-family:var(--f-mono);font-size:12px;color:var(--lav);padding-top:2px}
+.anat h4{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px}
+.anat p{font-size:14px;color:#9AABC5;line-height:1.5}
+
+.versions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.ver-card{border-radius:var(--r-card);border:1px solid var(--line);background:var(--white);display:flex;flex-direction:column;overflow:hidden}
+.ver-card .art{flex:1;display:grid;place-items:center;padding:40px 24px;min-height:220px}
+.ver-card .cap{padding:14px 18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;font-size:13px;background:var(--white)}
+.ver-card .cap b{font-family:var(--f-display);font-weight:600}
+.ver-card .cap span{color:var(--muted);font-family:var(--f-mono);font-size:11.5px}
+.span3{grid-column:span 3}.span2{grid-column:span 2}
+.lockup-h{display:flex;align-items:center;gap:18px}
+.lockup-h svg{width:64px;height:64px}
+.lockup-h .wm{font-family:var(--f-display);font-weight:700;font-size:44px;letter-spacing:.14em;line-height:1}
+.lockup-v{display:flex;flex-direction:column;align-items:center;gap:14px}
+.lockup-v svg{width:72px;height:72px}
+.lockup-v .wm{font-family:var(--f-display);font-weight:700;font-size:28px;letter-spacing:.16em;line-height:1}
+
+.icons-row{margin-top:16px;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:16px}
+.icon-sizes{display:flex;align-items:end;gap:28px;flex-wrap:wrap;padding:32px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-card)}
+.appicon{border-radius:22.5%;background:linear-gradient(150deg,#1E3558 0%,#14243B 55%,#0D1829 100%);display:grid;place-items:center;box-shadow:0 10px 24px -10px rgba(13,24,41,.5), inset 0 1px 0 rgba(255,255,255,.08)}
+.appicon svg{width:62%;height:62%}
+.icon-sizes figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px}
+.icon-sizes figcaption{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.fav-tab{padding:32px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-card);display:flex;flex-direction:column;gap:16px;justify-content:center}
+.browser{background:#E6EBF3;border-radius:10px 10px 0 0;padding:8px 8px 0;display:flex;gap:6px}
+.btab{background:var(--white);border-radius:8px 8px 0 0;padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:12.5px;min-width:0}
+.btab.off{background:transparent;color:var(--muted)}
+.btab svg{width:16px;height:16px;flex:none}
+.btab span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* clear space & misuse */
+.rules{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:16px}
+.clear{background:var(--white);border:1px solid var(--line);border-radius:var(--r-card);padding:32px;display:flex;flex-direction:column;gap:20px}
+.clear-box{position:relative;align-self:center;padding:34px;border:1px dashed #9DB7E0;background:repeating-linear-gradient(45deg,rgba(57,120,213,.05) 0 6px,transparent 6px 12px);max-width:100%}
+.clear-box .lockup-h{background:var(--white);padding:0;outline:1px solid var(--soft)}
+.clear-box .x{position:absolute;font-family:var(--f-mono);font-size:11px;color:var(--blue)}
+.minsize{display:flex;gap:28px;align-items:end;flex-wrap:wrap}
+.minsize div{display:flex;flex-direction:column;gap:6px;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.misuse{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mis{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:20px 12px 12px;display:flex;flex-direction:column;gap:12px;align-items:center}
+.mis .a{height:70px;display:grid;place-items:center}
+.mis .a svg{width:52px;height:52px}
+.mis p{font-size:12px;color:var(--muted);text-align:center;display:flex;gap:6px;align-items:center;line-height:1.3}
+.mis p i{color:var(--crit);font-style:normal;font-weight:700}
+
+/* ---------- COLOR ---------- */
+.palette{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.sw{border-radius:var(--r-card);overflow:hidden;border:1px solid var(--line);background:var(--white);display:flex;flex-direction:column}
+.sw .chip-c{height:170px;padding:18px;display:flex;flex-direction:column;justify-content:space-between}
+.sw .chip-c .hx{font-family:var(--f-mono);font-size:13px;font-weight:500}
+.sw .chip-c .role{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.sw .meta{padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.sw .meta b{font-family:var(--f-display);font-size:16px}
+.sw .meta span{font-size:13px;color:var(--muted);line-height:1.45}
+.sw .meta code{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:6px}
+.neutrals{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:16px}
+.nt{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--white)}
+.nt div{height:64px}
+.nt p{padding:10px 12px;font-size:12.5px;display:flex;flex-direction:column;line-height:1.35}
+.nt p code{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.ratio{margin-top:28px;display:flex;flex-direction:column;gap:10px}
+.ratio-bar{display:flex;height:44px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.ratio-bar div{display:flex;align-items:center;padding-inline:12px;font-family:var(--f-mono);font-size:11px;white-space:nowrap;overflow:hidden}
+.rule-line{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px}
+.rule-line div{display:flex;gap:12px;align-items:flex-start;font-size:14px}
+.rule-line .dot{width:12px;height:12px;border-radius:50%;flex:none;margin-top:6px}
+
+/* ---------- TYPE ---------- */
+.type-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.spec{background:var(--white);border:1px solid var(--line);border-radius:var(--r-card);padding:36px;display:flex;flex-direction:column;gap:20px}
+.spec .big{font-size:clamp(72px,9vw,128px);line-height:.9;letter-spacing:-.04em}
+.spec .alpha{font-size:20px;line-height:1.5;color:var(--muted);word-break:break-all}
+.spec .tag{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12px;color:var(--muted);gap:10px;flex-wrap:wrap}
+.weights{display:flex;gap:18px;flex-wrap:wrap;font-size:18px}
+.scale{margin-top:16px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.scale-row{display:grid;grid-template-columns:160px minmax(0,1fr);gap:24px;align-items:baseline;padding:20px 28px;border-bottom:1px solid var(--line)}
+.scale-row:last-child{border-bottom:0}
+.scale-row .lb{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);line-height:1.5}
+.scale-row .sm{min-width:0;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- FIELD ---------- */
+.field-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto;gap:16px}
+.field-tile{border-radius:var(--r-card);overflow:hidden;position:relative;min-height:240px;background:var(--navy-2)}
+.field-tile canvas{position:absolute;inset:0;width:100%;height:100%}
+.field-tile.main{grid-row:span 2;min-height:500px}
+.field-tile .lbl{position:absolute;left:16px;bottom:14px;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:#A9B6CC;text-transform:uppercase}
+.field-tile.light{background:var(--white);border:1px solid var(--line)}
+.field-tile.light .lbl{color:var(--muted)}
+.field-tile.soft{background:var(--lav-soft)}
+.field-tile.soft .lbl{color:#5E5DB8}
+.ai-marker{margin-top:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px}
+.ai-marker .box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-card);padding:28px;display:flex;flex-direction:column;gap:14px}
+.ai-pills{display:flex;gap:10px;flex-wrap:wrap}
+.ai-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 9px;border-radius:999px;font-size:12.5px;font-weight:600;background:rgba(140,139,234,.16);color:#CFCFFA;border:1px solid rgba(140,139,234,.3)}
+.ai-pill.l{background:var(--lav-soft);color:#5554B5;border-color:#DADAF7}
+.ai-pill svg{width:14px;height:14px}
+
+/* ---------- COMPONENTS ---------- */
+.comp-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r-card);padding:28px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.panel > h4{font-size:12px;font-family:var(--f-mono);font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.c5{grid-column:span 5}.c7{grid-column:span 7}.c4{grid-column:span 4}.c8{grid-column:span 8}.c6{grid-column:span 6}.c12{grid-column:span 12}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-body);font-weight:600;font-size:14px;padding:10px 16px;border-radius:var(--r-btn);border:1px solid transparent;cursor:pointer;line-height:1.2;white-space:nowrap}
+.btn svg{width:16px;height:16px}
+.btn.p{background:var(--blue);color:#fff;box-shadow:0 1px 0 rgba(255,255,255,.15) inset, 0 4px 10px -4px rgba(57,120,213,.6)}
+.btn.p:hover{background:var(--blue-2)}
+.btn.s{background:var(--white);color:var(--ink);border-color:var(--line)}
+.btn.s:hover{border-color:#C9D3E2}
+.btn.ai{background:var(--lav-soft);color:#4F4EB0;border-color:#DCDCF8}
+.btn.g{background:transparent;color:var(--blue)}
+.btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.status{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border-radius:999px;font-size:12px;font-weight:600;line-height:1.3;white-space:nowrap}
+.status svg{width:13px;height:13px}
+.st-new{background:#E8F0FC;color:#2B62B4}
+.st-prog{background:#FDF3E3;color:#9A6514}
+.st-res{background:#E3F5EF;color:#0F7A5B}
+.st-crit{background:#FBE7E9;color:#B22F3B}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.kpi .l{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.kpi .l svg{width:14px;height:14px}
+.kpi .v{font-family:var(--f-body);font-weight:600;font-size:28px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .d{font-size:12px;display:flex;gap:6px;align-items:center;color:var(--muted)}
+.delta{font-weight:600;padding:1px 6px;border-radius:6px;font-size:11.5px}
+.delta.up{background:#E3F5EF;color:#0F7A5B}
+.delta.dn{background:#FBE7E9;color:#B22F3B}
+.intel{background:linear-gradient(160deg,#F3F3FE 0%,#EAEAFC 100%);border:1px solid #DCDCF8;border-radius:var(--r-card);padding:22px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+.intel::after{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;border:1px solid rgba(140,139,234,.35);box-shadow:0 0 0 22px rgba(140,139,234,.06),0 0 0 23px rgba(140,139,234,.22),0 0 0 48px rgba(140,139,234,.04),0 0 0 49px rgba(140,139,234,.16)}
+.intel > *{position:relative;z-index:1}
+.intel .hd{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#5554B5;letter-spacing:.02em}
+.intel .hd svg{width:16px;height:16px}
+.intel h5{font-family:var(--f-display);font-size:17px;font-weight:700;margin:0;color:var(--ink);line-height:1.3}
+.intel p{font-size:13.5px;color:#4A5873;line-height:1.5}
+.intel .ft{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px}
+.intel .ft a{font-size:13px;font-weight:600;color:#4F4EB0;text-decoration:none;display:inline-flex;gap:4px;align-items:center}
+.intel .ft a svg{width:14px;height:14px}
+.conf{font-family:var(--f-mono);font-size:11px;color:#6E6DC4}
+.tokens{font-family:var(--f-mono);font-size:12px;line-height:1.75;background:var(--navy-2);color:#C3CEE0;border-radius:12px;padding:20px;overflow-x:auto;white-space:pre;margin:0}
+.tokens .c{color:#6F82A0}.tokens .k{color:#A9A8F5}.tokens .v{color:#7FB1F5}
+.icon-list{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px}
+.icon-list div{aspect-ratio:1;max-width:100%;border:1px solid var(--line);border-radius:10px;display:grid;place-items:center;color:var(--navy)}
+.icon-list svg{width:20px;height:20px}
+
+/* ---------- VOICE ---------- */
+.voice{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.msgs{display:flex;flex-direction:column;gap:10px}
+.msg{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:center;padding:14px 18px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.03)}
+.msg .s{font-family:var(--f-mono);font-size:11px;color:#7D90AE;letter-spacing:.04em;text-transform:uppercase}
+.msg p{font-size:15px;color:#fff}
+.slogans{display:flex;flex-direction:column;gap:6px}
+.slogans .main{font-family:var(--f-display);font-size:clamp(36px,5vw,60px);font-weight:700;line-height:1.02;letter-spacing:-.03em;color:#fff;margin-bottom:6px}
+.slogans .main span{background:linear-gradient(90deg,#7FB1F5,#B6B5F8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.slogans .tr{font-size:14px;color:#93A3BC;margin-bottom:24px}
+.slogans ul{list-style:none;margin:0;padding:0;border-top:1px solid rgba(255,255,255,.08)}
+.slogans li{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--f-display);font-size:19px;font-weight:500;color:#DCE4F2;display:flex;justify-content:space-between;gap:12px}
+.slogans li small{font-family:var(--f-mono);font-size:11px;color:#6F82A0;font-weight:400;align-self:center;white-space:nowrap}
+.dosdonts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.dd{padding:16px 18px;border-radius:12px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.dd b{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.dd.y{background:rgba(22,164,122,.1);border:1px solid rgba(22,164,122,.25)} .dd.y b{color:#4FD1A5}
+.dd.n{background:rgba(214,69,80,.1);border:1px solid rgba(214,69,80,.25)} .dd.n b{color:#F08A92}
+.dd p{color:#DCE4F2}
+
+/* ---------- APPLICATIONS ---------- */
+.mock-label{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:56px 0 16px;flex-wrap:wrap}
+.mock-label:first-of-type{margin-top:0}
+.mock-label h3{font-size:22px;font-weight:700}
+.mock-label span{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.scroll-x{overflow-x:auto;border-radius:18px;-webkit-overflow-scrolling:touch}
+.device{background:linear-gradient(180deg,#C7D2E3,#AEBBD0);padding:14px;border-radius:18px;min-width:1080px}
+.app{display:grid;grid-template-columns:224px minmax(0,1fr);background:var(--bg);border-radius:10px;overflow:hidden;height:720px;font-size:13px}
+.side{background:var(--navy);color:#B9C6DA;padding:20px 14px;display:flex;flex-direction:column;gap:4px}
+.side .brand{display:flex;align-items:center;gap:10px;padding:4px 8px 22px}
+.side .brand svg{width:28px;height:28px}
+.side .brand b{font-family:var(--f-display);font-weight:700;letter-spacing:.14em;color:#fff;font-size:15px}
+.side .sl{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;color:#5E7292;padding:14px 10px 6px;text-transform:uppercase}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;font-weight:500}
+.nav svg{width:17px;height:17px}
+.nav.on{background:rgba(57,120,213,.18);color:#fff;box-shadow:inset 0 0 0 1px rgba(57,120,213,.35)}
+.nav .badge{margin-left:auto;font-size:10.5px;font-weight:600;background:rgba(140,139,234,.22);color:#CFCFFA;padding:1px 7px;border-radius:999px}
+.nav.ai{color:#CFCFFA}
+.side .foot{margin-top:auto;border-top:1px solid rgba(255,255,255,.08);padding:14px 8px 0;display:flex;gap:10px;align-items:center}
+.av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex:none}
+.side .foot div{display:flex;flex-direction:column;line-height:1.3}
+.side .foot b{color:#fff;font-size:12.5px}
+.side .foot span{font-size:11px;color:#7D90AE}
+.appmain{padding:20px 24px;display:flex;flex-direction:column;gap:16px;overflow:hidden;min-width:0}
+.topbar{display:flex;align-items:center;gap:16px}
+.topbar h2{font-size:20px;font-weight:700}
+.topbar .crumb{font-size:11.5px;color:var(--muted)}
+.search{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--line);border-radius:9px;padding:8px 12px;color:var(--muted);width:300px}
+.search svg{width:15px;height:15px}
+.search kbd{margin-left:auto;font-family:var(--f-mono);font-size:10.5px;border:1px solid var(--line);border-radius:5px;padding:0 5px}
+.seg{display:flex;background:var(--white);border:1px solid var(--line);border-radius:9px;padding:3px}
+.seg span{padding:5px 10px;border-radius:6px;font-size:12px;color:var(--muted);font-weight:500}
+.seg span.on{background:var(--soft);color:var(--blue-2);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.app .kpi{background:var(--white);padding:14px 16px}
+.app .kpi .v{font-size:24px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:12px;min-height:0}
+.card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card .ch{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card .ch h4{font-size:14px;font-weight:700}
+.card .ch p{font-size:11.5px;color:var(--muted)}
+.legend{display:flex;gap:14px;font-size:11.5px;color:var(--muted)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.cats{display:flex;flex-direction:column;gap:10px}
+.cat{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:4px 10px;font-size:12.5px}
+.cat .bar{grid-column:1/-1;height:6px;border-radius:4px;background:var(--bg);overflow:hidden}
+.cat .bar i{display:block;height:100%;border-radius:4px}
+.cat .pc{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.cat .nm{display:flex;align-items:center;gap:6px;min-width:0}
+.cat .nm em{font-style:normal;color:var(--muted);font-size:11px}
+.grid3{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:12px;min-height:0;flex:1}
+table.tk{width:100%;border-collapse:collapse;font-size:12.5px}
+table.tk th{text-align:left;font-weight:500;color:var(--muted);font-size:11px;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.tk td{padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.tk tr:last-child td{border-bottom:0}
+table.tk .id{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+table.tk .sub{max-width:240px;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.cattag{font-size:11px;padding:2px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:#40506A;display:inline-flex;gap:5px;align-items:center}
+.cattag svg{width:11px;height:11px;color:var(--lav)}
+.app .intel{padding:16px;gap:9px}
+.app .intel h5{font-size:14.5px}
+.app .intel p{font-size:12.5px}
+
+/* Login */
+.login{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);height:620px;border-radius:10px;overflow:hidden;background:var(--white)}
+.login .art{position:relative;background:var(--navy-2);color:#fff;padding:40px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.login .art canvas{position:absolute;inset:0;width:100%;height:100%}
+.login .art > *{position:relative}
+.login .art h3{font-size:40px;font-weight:700;line-height:1.05;letter-spacing:-.03em;max-width:12ch}
+.login .art p{color:#9AABC5;max-width:38ch;margin-top:14px;font-size:14px}
+.login .art .q{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:12px;background:rgba(13,24,41,.6);border:1px solid rgba(140,139,234,.25);backdrop-filter:blur(6px);max-width:380px}
+.login .art .q svg{width:18px;height:18px;color:var(--lav);flex:none}
+.login .art .q span{font-size:13px;color:#D6DCF7}
+.login .form{padding:56px 64px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+.login .form h4{font-size:26px;font-weight:700}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500}
+.input{border:1px solid var(--line);border-radius:9px;padding:11px 12px;color:var(--muted);font-weight:400;display:flex;align-items:center;gap:8px;background:var(--white)}
+.input.f{border-color:var(--blue);box-shadow:0 0 0 3px rgba(57,120,213,.15);color:var(--ink)}
+.input svg{width:16px;height:16px;color:#94A3B8}
+.or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* small apps grid */
+.apps-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:16px}
+.phone-stage{background:linear-gradient(160deg,#DCE8F8,#EEEEFC);border-radius:var(--r-card);display:grid;place-items:center;padding:40px 20px;min-height:600px}
+.phone{width:290px;max-width:100%;border-radius:44px;background:#0B1424;padding:10px;box-shadow:0 40px 60px -30px rgba(20,36,59,.55)}
+.phone .scr{border-radius:35px;background:var(--bg);overflow:hidden;height:580px;display:flex;flex-direction:column}
+.phone .sb{display:flex;justify-content:space-between;padding:12px 22px 6px;font-size:11.5px;font-weight:600}
+.phone .ph{padding:8px 18px 14px;display:flex;justify-content:space-between;align-items:center}
+.phone .ph h5{font-family:var(--f-display);font-size:20px;margin:0}
+.phone .pb{padding:0 14px;display:flex;flex-direction:column;gap:10px}
+.phone .mk{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.phone .kpi{background:var(--white);padding:12px}
+.phone .kpi .v{font-size:20px}
+.phone .intel{padding:14px;gap:7px}
+.phone .intel h5{font-size:14px}
+.phone .intel p{font-size:12px}
+.phone .tl{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:12px}
+.phone .tl div{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.phone .tabbar{margin-top:auto;background:var(--white);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px 0 18px;color:var(--muted)}
+.phone .tabbar svg{width:20px;height:20px}
+.phone .tabbar .on{color:var(--blue)}
+
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.cards-stage{background:#D9DEE7;border-radius:var(--r-card);padding:36px;display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;position:relative;overflow:hidden;min-height:290px}
+.bcard{width:300px;max-width:100%;aspect-ratio:85/55;border-radius:10px;box-shadow:0 24px 40px -22px rgba(20,36,59,.55),0 2px 4px rgba(20,36,59,.1);position:relative;overflow:hidden;padding:20px;display:flex;flex-direction:column;justify-content:space-between}
+.bcard.front{background:var(--navy);color:#fff;transform:rotate(-4deg)}
+.bcard.front canvas{position:absolute;inset:0;width:100%;height:100%}
+.bcard.front > *{position:relative}
+.bcard.back{background:var(--white);transform:rotate(3deg)}
+.bcard .who b{font-family:var(--f-display);font-size:15px;display:block}
+.bcard .who span{font-size:11px;color:var(--muted)}
+.bcard .ct{font-size:10.5px;color:#40506A;line-height:1.6;font-family:var(--f-mono)}
+.bcard .strip{position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,var(--blue),var(--lav))}
+
+.deck{aspect-ratio:16/9;max-width:100%;border-radius:var(--r-card);background:var(--navy-2);position:relative;overflow:hidden;color:#fff;padding:clamp(20px,3.4vw,40px);display:flex;flex-direction:column;justify-content:space-between}
+.deck canvas{position:absolute;inset:0;width:100%;height:100%}
+.deck > *{position:relative}
+.deck .top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--f-mono);font-size:11px;color:#8FA2C2;letter-spacing:.08em;text-transform:uppercase}
+.deck .top .lk{display:flex;align-items:center;gap:10px;color:#fff;font-family:var(--f-display);font-weight:700;letter-spacing:.14em;font-size:14px}
+.deck .top .lk svg{width:26px;height:26px}
+.deck h3{font-size:clamp(22px,3.2vw,40px);font-weight:700;line-height:1.05;letter-spacing:-.03em;max-width:14ch}
+.deck h3 span{color:#A9A8F5}
+.deck .bt{display:flex;justify-content:space-between;font-size:12px;color:#8FA2C2;gap:10px;flex-wrap:wrap}
+
+.gh{border-radius:var(--r-card);border:1px solid #30363D;background:#0D1117;color:#E6EDF3;overflow:hidden;margin-top:16px}
+.gh .bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #30363D;font-size:13px;flex-wrap:wrap}
+.gh .bar b{color:#4493F8;font-weight:600}
+.gh .bar .pill{border:1px solid #30363D;border-radius:999px;padding:0 8px;font-size:11px;color:#9198A1}
+.gh .banner{position:relative;height:200px;background:var(--navy-2);overflow:hidden;display:flex;align-items:center;padding:0 32px;margin:16px;border-radius:8px}
+.gh .banner canvas{position:absolute;inset:0;width:100%;height:100%}
+.gh .banner > div{position:relative;display:flex;flex-direction:column;gap:10px}
+.gh .banner .lockup-h svg{width:44px;height:44px}
+.gh .banner .lockup-h .wm{font-size:30px;color:#fff}
+.gh .banner p{font-size:13px;color:#9AABC5}
+.gh .badges{display:flex;gap:6px;padding:0 16px 16px;flex-wrap:wrap}
+.gh .badges span{font-family:var(--f-mono);font-size:10.5px;display:inline-flex;border-radius:4px;overflow:hidden}
+.gh .badges span i{font-style:normal;background:#444D56;padding:2px 6px;color:#fff}
+.gh .badges span em{font-style:normal;padding:2px 6px;color:#fff}
+
+/* ---------- RULES ---------- */
+.rules2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.rl{border-radius:var(--r-card);padding:28px;display:flex;flex-direction:column;gap:14px;background:var(--white);border:1px solid var(--line)}
+.rl h3{font-size:18px;display:flex;gap:10px;align-items:center}
+.rl h3 svg{width:20px;height:20px}
+.rl ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+.rl li{padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px;display:flex;gap:12px}
+.rl li:last-child{border-bottom:0}
+.rl li span{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding-top:3px;flex:none;width:20px}
+.summary{margin-top:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.summary div{background:var(--white);padding:18px 20px;display:flex;flex-direction:column;gap:4px}
+.summary span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.summary b{font-family:var(--f-display);font-size:15px;font-weight:600}
+
+footer{background:var(--navy-2);color:#7D90AE;padding-block:40px;font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+footer .lockup-h svg{width:28px;height:28px}
+footer .lockup-h .wm{font-size:16px;color:#fff}
+footer .lockup-h{gap:10px}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:980px){
+  .sec-head,.logo-stage,.positioning,.type-grid,.voice,.apps-grid,.rules,.rules2,.icons-row,.ai-marker{grid-template-columns:minmax(0,1fr)}
+  .sec-head{gap:16px}
+  .palette{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .neutrals{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .versions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .span3,.span2{grid-column:span 2}
+  .versions .span2.half{grid-column:span 1}
+  .field-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .field-tile.main{grid-column:span 2;grid-row:auto;min-height:340px}
+  .comp-grid > *{grid-column:span 12}
+  .summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rule-line{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  section{padding-block:64px}
+  .pillars{grid-template-columns:minmax(0,1fr)}
+  .persona{grid-template-columns:minmax(0,1fr)}
+  .palette{grid-template-columns:minmax(0,1fr)}
+  .neutrals{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .versions .span2.half{grid-column:span 2}
+  .misuse{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lockup-h .wm{font-size:30px}.lockup-h svg{width:46px;height:46px}
+  .scale-row{grid-template-columns:minmax(0,1fr);gap:6px;padding:16px 18px}
+  .msg{grid-template-columns:minmax(0,1fr);gap:4px}
+  .icon-list{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .field-grid{grid-template-columns:minmax(0,1fr)}
+  .field-tile.main{grid-column:auto}
+  .dosdonts{grid-template-columns:minmax(0,1fr)}
+  .summary{grid-template-columns:minmax(0,1fr)}
+  .cards-stage{padding:28px 16px}
+  .spec{padding:24px}
+}
+@page{size:1400px 1980px;margin:0}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:var(--bg)}
+  .cover .inner{min-height:1980px}
+  section{break-before:page;padding-block:80px;min-height:1980px}
+  section.tall{min-height:0}
+  .scroll-x{overflow:visible}
+  .device{min-width:0}
+  .pillar,.sw,.ver-card,.spec,.panel,.field-tile,.mis,.rl,.msg,.device,.phone-stage,.deck,.gh,.cards-stage,.scale-row,.anat{break-inside:avoid}
+  .mock-label{break-after:avoid}
+  footer{break-before:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<!-- ============ SVG DEFINITIONS: the SENTRIA mark ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gOuter" x1="8" y1="56" x2="56" y2="8" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3978D5"/><stop offset="1" stop-color="#6FA2EC"/>
+    </linearGradient>
+    <linearGradient id="gInner" x1="20" y1="44" x2="44" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8C8BEA"/><stop offset="1" stop-color="#B9B8F7"/>
+    </linearGradient>
+    <radialGradient id="gCore" cx="32" cy="30" r="7" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#C9C8FA"/><stop offset="1" stop-color="#8C8BEA"/>
+    </radialGradient>
+    <!-- Mark geometry: two open orbits (300° each) with opposing gaps + a perception core and two signal nodes -->
+    <symbol id="mark" viewBox="0 0 64 64">
+      <path d="M54.55 23.79 A24 24 0 1 1 36.17 8.36" fill="none" stroke="url(#gOuter)" stroke-width="4.6" stroke-linecap="round"/>
+      <path d="M19.78 36.45 A13 13 0 1 1 29.74 44.80" fill="none" stroke="url(#gInner)" stroke-width="4.6" stroke-linecap="round"/>
+      <circle cx="32" cy="32" r="5.2" fill="url(#gCore)"/>
+      <circle cx="45.4" cy="11.8" r="3.3" fill="#8C8BEA"/>
+      <circle cx="23.64" cy="41.96" r="2.1" fill="#3978D5"/>
+    </symbol>
+    <!-- Mark on light backgrounds: navy core -->
+    <symbol id="mark-light" viewBox="0 0 64 64">
+      <path d="M54.55 23.79 A24 24 0 1 1 36.17 8.36" fill="none" stroke="#3978D5" stroke-width="4.6" stroke-linecap="round"/>
+      <path d="M19.78 36.45 A13 13 0 1 1 29.74 44.80" fill="none" stroke="#8C8BEA" stroke-width="4.6" stroke-linecap="round"/>
+      <circle cx="32" cy="32" r="5.2" fill="#14243B"/>
+      <circle cx="45.4" cy="11.8" r="3.3" fill="#8C8BEA"/>
+      <circle cx="23.64" cy="41.96" r="2.1" fill="#3978D5"/>
+    </symbol>
+    <symbol id="mark-mono" viewBox="0 0 64 64">
+      <path d="M54.55 23.79 A24 24 0 1 1 36.17 8.36" fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round"/>
+      <path d="M19.78 36.45 A13 13 0 1 1 29.74 44.80" fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round"/>
+      <circle cx="32" cy="32" r="5.2" fill="currentColor"/>
+      <circle cx="45.4" cy="11.8" r="3.3" fill="currentColor"/>
+      <circle cx="23.64" cy="41.96" r="2.1" fill="currentColor"/>
+    </symbol>
+    <!-- AI spark / perception marker -->
+    <symbol id="spark" viewBox="0 0 24 24">
+      <path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5Z" fill="currentColor"/>
+      <circle cx="19" cy="19" r="2" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ COVER ============ -->
+<header class="cover">
+  <canvas data-field="cover"></canvas>
+  <div class="wrap inner">
+    <div class="cover-top"><span>Brand Book · v1.0</span><span>Novembro 2026</span></div>
+    <div class="cover-main">
+      <div class="cover-logo">
+        <svg viewBox="0 0 64 64" role="img" aria-label="Símbolo SENTRIA"><use href="#mark"/></svg>
+        <span class="wm">SENTRIA</span>
+      </div>
+      <h1><em>See beyond the ticket.</em><br>Identidade visual e direção de marca.</h1>
+    </div>
+    <div class="cover-bottom">
+      <div class="tags"><span class="chip">AI-powered</span><span class="chip">Customer Intelligence Platform</span><span class="chip">Modern Intelligence</span></div>
+      <div class="ver">Documento de direção criativa<br>Uso interno · confidencial</div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 01 CONCEITO ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">01 <b>/ Conceito</b></div><h2>O chamado é o começo. A inteligência é o que vem depois.</h2></div>
+      <p class="muted">SENTRIA recebe tickets, categoriza cada problema com IA e transforma o volume de atendimento em indicadores que orientam decisões de negócio. A marca precisa mostrar isso: um produto que vai além da gestão de chamados, percebe padrões e entrega clareza.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <svg class="glyph" viewBox="0 0 44 44"><circle cx="22" cy="22" r="19" fill="none" stroke="#DCE8F8" stroke-width="2"/><circle cx="22" cy="22" r="11" fill="none" stroke="#3978D5" stroke-width="2.4"/><circle cx="22" cy="22" r="3.6" fill="#14243B"/></svg>
+        <span class="pt">SEN · sentir, perceber</span>
+        <h3>Perception</h3>
+        <p class="muted">Interpretar o que está acontecendo em cada interação, mesmo quando o cliente não diz com todas as palavras.</p>
+      </div>
+      <div class="pillar">
+        <svg class="glyph" viewBox="0 0 44 44"><path d="M8 32 L20 14 L34 24" fill="none" stroke="#8C8BEA" stroke-width="2.2"/><path d="M20 14 L30 8" fill="none" stroke="#DCE8F8" stroke-width="2"/><circle cx="8" cy="32" r="3.6" fill="#8C8BEA"/><circle cx="20" cy="14" r="4.2" fill="#14243B"/><circle cx="34" cy="24" r="3.6" fill="#3978D5"/><circle cx="30" cy="8" r="2.4" fill="#8C8BEA"/></svg>
+        <span class="pt">TRI · conectar sinais</span>
+        <h3>Intelligence</h3>
+        <p class="muted">Relacionar tickets, categorias e clientes para identificar padrões, recorrências e riscos antes que virem crise.</p>
+      </div>
+      <div class="pillar">
+        <svg class="glyph" viewBox="0 0 44 44"><rect x="6" y="26" width="7" height="12" rx="2" fill="#DCE8F8"/><rect x="18.5" y="18" width="7" height="20" rx="2" fill="#8C8BEA"/><rect x="31" y="8" width="7" height="30" rx="2" fill="#3978D5"/></svg>
+        <span class="pt">IA · decidir melhor</span>
+        <h3>Clarity</h3>
+        <p class="muted">Transformar dados complexos em painéis legíveis e recomendações objetivas para quem decide.</p>
+      </div>
+    </div>
+    <div class="positioning">
+      <div class="statement">
+        <canvas data-field="statement"></canvas>
+        <div class="eyebrow">Posicionamento</div>
+        <q>Uma plataforma de Customer Intelligence que ajuda equipes a compreender o contexto por trás de cada interação com clientes.</q>
+        <span class="muted" style="font-size:13px">Público: empresas de tecnologia e equipes de atendimento</span>
+      </div>
+      <div class="persona">
+        <div><b>Inteligente</b><span>Interface organizada, analítica e fácil de compreender.</span></div>
+        <div><b>Sofisticada</b><span>Tipografia limpa, refinada, sem efeitos exagerados.</span></div>
+        <div><b>Confiável</b><span>Cores profundas, contraste adequado e hierarquia consistente.</span></div>
+        <div><b>Inovadora</b><span>Elementos gráficos sutis e dados conectados.</span></div>
+        <div><b>Estratégica</b><span>Indicadores e tendências que apoiam decisões.</span></div>
+        <div><b>Humana</b><span>Linguagem acessível, direta e respeitosa.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 SÍMBOLO ============ -->
+<section class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">02 <b>/ Símbolo</b></div><h2>Núcleo de Percepção</h2></div>
+      <p class="muted">Duas órbitas abertas giram em sentidos opostos ao redor de um núcleo. As aberturas desenham um “S” implícito e deixam o símbolo respirar. Dois pontos marcam sinais captados nas bordas. Funciona sozinho como ícone do app, favicon e avatar.</p>
+    </div>
+    <div class="logo-stage">
+      <div class="construct">
+        <svg viewBox="0 0 64 64" role="img" aria-label="Construção do símbolo">
+          <g fill="none" stroke="#2A4066" stroke-width=".18" stroke-dasharray=".8 .8">
+            <circle cx="32" cy="32" r="24"/><circle cx="32" cy="32" r="13"/><circle cx="32" cy="32" r="5.2"/>
+            <line x1="2" y1="32" x2="62" y2="32"/><line x1="32" y1="2" x2="32" y2="62"/>
+            <line x1="10" y1="10" x2="54" y2="54"/><line x1="54" y1="10" x2="10" y2="54"/>
+          </g>
+          <g font-family="JetBrains Mono, monospace" font-size="1.6" fill="#6F82A0">
+            <text x="57.2" y="31.2">r 24</text><text x="45.6" y="31.2">r 13</text><text x="33" y="27.6">core</text>
+            <text x="47.5" y="8.6">sinal</text>
+          </g>
+          <use href="#mark"/>
+        </svg>
+      </div>
+      <div class="anatomy">
+        <div class="anat"><span class="k">A</span><div><h4>Núcleo</h4><p>O ponto de entendimento. É para onde todos os sinais convergem: a resposta, o insight, a decisão.</p></div></div>
+        <div class="anat"><span class="k">B</span><div><h4>Órbita interna · Lavanda</h4><p>A camada da IA, que interpreta, categoriza e relaciona. A lavanda é reservada para inteligência em todo o sistema.</p></div></div>
+        <div class="anat"><span class="k">C</span><div><h4>Órbita externa · Blue</h4><p>O campo de atendimento: tickets, canais e clientes. O azul representa ação e confiança.</p></div></div>
+        <div class="anat"><span class="k">D</span><div><h4>Sinais</h4><p>Dois pontos nas extremidades das órbitas. Cada interação é um sinal, e a SENTRIA percebe os dois lados.</p></div></div>
+        <div class="anat"><span class="k">∠</span><div><h4>Proporção</h4><p>Raios 24 : 13 : 5,2 sobre grid de 64. Traço constante de 4,6 u, terminais arredondados. Aberturas de 60° em diagonal oposta.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 VERSÕES ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">03 <b>/ Assinaturas</b></div><h2>Quatro versões, uma identidade</h2></div>
+      <p class="muted">SENTRIA em caixa alta, Plus Jakarta Sans 700, com espaçamento entre letras de 14%. A versão principal é horizontal. As demais existem para espaços verticais, ícones e impressão em uma cor.</p>
+    </div>
+    <div class="versions">
+      <div class="ver-card span3"><div class="art"><div class="lockup-h"><svg viewBox="0 0 64 64"><use href="#mark-light"/></svg><span class="wm" style="color:#14243B">SENTRIA</span></div></div><div class="cap"><b>Principal · horizontal</b><span>fundo claro</span></div></div>
+      <div class="ver-card span3" style="background:#14243B;border-color:#14243B"><div class="art"><div class="lockup-h"><svg viewBox="0 0 64 64"><use href="#mark"/></svg><span class="wm" style="color:#fff">SENTRIA</span></div></div><div class="cap" style="background:#0D1829;border-color:#1D3150;color:#fff"><b>Principal · horizontal</b><span>fundo navy</span></div></div>
+      <div class="ver-card span2 half"><div class="art"><div class="lockup-v"><svg viewBox="0 0 64 64"><use href="#mark-light"/></svg><span class="wm" style="color:#14243B">SENTRIA</span></div></div><div class="cap"><b>Compacta</b><span>vertical</span></div></div>
+      <div class="ver-card span2 half" style="background:#EEEEFC;border-color:#DCDCF8"><div class="art"><svg viewBox="0 0 64 64" style="width:104px;height:104px"><use href="#mark-light"/></svg></div><div class="cap"><b>Monograma</b><span>símbolo</span></div></div>
+      <div class="ver-card span2 half" style="background:#3978D5;border-color:#3978D5"><div class="art"><div class="lockup-v" style="color:#fff"><svg viewBox="0 0 64 64"><use href="#mark-mono"/></svg><span class="wm">SENTRIA</span></div></div><div class="cap" style="background:#2F66BA;border-color:#2F66BA;color:#fff"><b>Mono branca</b><span style="color:#DCE8F8">1 cor</span></div></div>
+      <div class="ver-card span3"><div class="art"><div class="lockup-h" style="color:#14243B"><svg viewBox="0 0 64 64"><use href="#mark-mono"/></svg><span class="wm">SENTRIA</span></div></div><div class="cap"><b>Mono navy</b><span>impressão 1 cor · #14243B</span></div></div>
+      <div class="ver-card span3" style="background:#0D1829;border-color:#0D1829"><div class="art"><div class="lockup-h" style="color:#fff"><svg viewBox="0 0 64 64"><use href="#mark-mono"/></svg><span class="wm">SENTRIA</span></div></div><div class="cap" style="background:#0D1829;border-color:#1D3150;color:#fff"><b>Mono branca</b><span>sobre fotos e fundos escuros</span></div></div>
+    </div>
+
+    <div class="icons-row">
+      <div class="icon-sizes">
+        <figure><div class="appicon" style="width:120px;height:120px"><svg viewBox="0 0 64 64"><use href="#mark"/></svg></div><figcaption>iOS / Android · 1024</figcaption></figure>
+        <figure><div class="appicon" style="width:76px;height:76px"><svg viewBox="0 0 64 64"><use href="#mark"/></svg></div><figcaption>App · 180</figcaption></figure>
+        <figure><div class="appicon" style="width:48px;height:48px;border-radius:12px"><svg viewBox="0 0 64 64"><use href="#mark"/></svg></div><figcaption>Avatar · 48</figcaption></figure>
+        <figure><div class="appicon" style="width:32px;height:32px;border-radius:8px"><svg viewBox="0 0 64 64" style="width:74%;height:74%"><use href="#mark"/></svg></div><figcaption>Favicon · 32</figcaption></figure>
+        <figure><div style="width:16px;height:16px;display:grid;place-items:center"><svg viewBox="0 0 64 64" width="16" height="16"><use href="#mark-light"/></svg></div><figcaption>16</figcaption></figure>
+      </div>
+      <div class="fav-tab">
+        <div>
+          <div class="browser">
+            <div class="btab"><svg viewBox="0 0 64 64"><use href="#mark-light"/></svg><span>SENTRIA · Overview</span></div>
+            <div class="btab off"><span>Nova aba</span></div>
+          </div>
+          <div style="height:44px;background:var(--white);border:1px solid #E6EBF3;border-top:0;border-radius:0 0 10px 10px"></div>
+        </div>
+        <p class="muted" style="font-size:13.5px">Abaixo de 24 px, o favicon usa a versão sem gradiente para manter o contraste das órbitas.</p>
+      </div>
+    </div>
+
+    <div class="rules">
+      <div class="clear">
+        <div class="eyebrow">Área de proteção e tamanho mínimo</div>
+        <div class="clear-box">
+          <span class="x" style="top:10px;left:50%;transform:translateX(-50%)">x</span>
+          <span class="x" style="left:12px;top:50%;transform:translateY(-50%)">x</span>
+          <div class="lockup-h"><svg viewBox="0 0 64 64"><use href="#mark-light"/></svg><span class="wm" style="color:#14243B">SENTRIA</span></div>
+        </div>
+        <p class="muted" style="font-size:13.5px">x = diâmetro do núcleo × 2. Nenhum texto, borda ou imagem entra nessa área.</p>
+        <div class="minsize">
+          <div><div class="lockup-h" style="gap:6px"><svg viewBox="0 0 64 64" style="width:20px;height:20px"><use href="#mark-light"/></svg><span class="wm" style="font-size:13px;color:#14243B">SENTRIA</span></div>Digital · 96 px</div>
+          <div><div class="lockup-h" style="gap:5px"><svg viewBox="0 0 64 64" style="width:15px;height:15px"><use href="#mark-light"/></svg><span class="wm" style="font-size:10px;color:#14243B">SENTRIA</span></div>Impresso · 25 mm</div>
+        </div>
+      </div>
+      <div class="misuse">
+        <div class="mis"><div class="a"><svg viewBox="0 0 64 64" style="transform:scaleX(1.5)"><use href="#mark-light"/></svg></div><p><i>✕</i>Não distorcer</p></div>
+        <div class="mis"><div class="a"><svg viewBox="0 0 64 64" style="transform:rotate(90deg)"><use href="#mark-light"/></svg></div><p><i>✕</i>Não girar</p></div>
+        <div class="mis"><div class="a" style="color:#E05A2B"><svg viewBox="0 0 64 64"><use href="#mark-mono"/></svg></div><p><i>✕</i>Não trocar as cores</p></div>
+        <div class="mis"><div class="a"><svg viewBox="0 0 64 64" style="filter:drop-shadow(0 0 6px #00E5FF) drop-shadow(0 0 12px #FF3CF0)"><use href="#mark-light"/></svg></div><p><i>✕</i>Sem brilho neon</p></div>
+        <div class="mis"><div class="a" style="background:repeating-linear-gradient(45deg,#3978D5 0 6px,#8C8BEA 6px 12px);border-radius:8px;width:84px"><svg viewBox="0 0 64 64"><use href="#mark-light"/></svg></div><p><i>✕</i>Fundo sem contraste</p></div>
+        <div class="mis"><div class="a"><span style="font-family:Georgia,serif;font-size:22px;font-style:italic;color:#14243B">Sentria</span></div><p><i>✕</i>Não trocar a fonte</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 CORES ============ -->
+<section class="white">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">04 <b>/ Cores</b></div><h2>Paleta Intelligence Blue</h2></div>
+      <p class="muted">Cada cor tem um papel. Navy estrutura, azul convida à ação e lavanda sinaliza tudo que vem da IA. Assim a pessoa usuária distingue um botão comum de uma análise inteligente sem precisar ler.</p>
+    </div>
+    <div class="palette">
+      <div class="sw"><div class="chip-c" style="background:#14243B;color:#fff"><span class="role">Estrutura</span><span class="hx">#14243B</span></div><div class="meta"><b>Midnight Navy</b><span>Menu lateral, títulos e fundos escuros.</span><code>RGB 20 36 59 · CMYK 66 39 0 77</code></div></div>
+      <div class="sw"><div class="chip-c" style="background:#3978D5;color:#fff"><span class="role">Ação</span><span class="hx">#3978D5</span></div><div class="meta"><b>Intelligence Blue</b><span>Cor principal. Botões, links e foco.</span><code>RGB 57 120 213 · CMYK 73 44 0 16</code></div></div>
+      <div class="sw"><div class="chip-c" style="background:#8C8BEA;color:#14243B"><span class="role">Inteligência</span><span class="hx">#8C8BEA</span></div><div class="meta"><b>Insight Lavender</b><span>Exclusiva para IA, insights e recomendações.</span><code>RGB 140 139 234 · CMYK 40 41 0 8</code></div></div>
+      <div class="sw"><div class="chip-c" style="background:#DCE8F8;color:#14243B"><span class="role">Superfície</span><span class="hx">#DCE8F8</span></div><div class="meta"><b>Soft Blue</b><span>Fundos de destaque e estados selecionados.</span><code>RGB 220 232 248 · CMYK 11 6 0 3</code></div></div>
+    </div>
+    <div class="neutrals">
+      <div class="nt"><div style="background:#F5F7FB"></div><p>Background<code>#F5F7FB</code></p></div>
+      <div class="nt"><div style="background:#FFFFFF;border-bottom:1px solid var(--line)"></div><p>Cards<code>#FFFFFF</code></p></div>
+      <div class="nt"><div style="background:#E4E9F1"></div><p>Bordas<code>#E4E9F1</code></p></div>
+      <div class="nt"><div style="background:#64748B"></div><p>Texto secundário<code>#64748B</code></p></div>
+      <div class="nt"><div style="background:#16A47A"></div><p>Sucesso<code>#16A47A</code></p></div>
+      <div class="nt"><div style="background:#E6A23C"></div><p>Atenção<code>#E6A23C</code></p></div>
+    </div>
+    <div class="ratio">
+      <span class="eyebrow">Proporção de uso em interface</span>
+      <div class="ratio-bar">
+        <div style="flex:52;background:#F5F7FB;color:#64748B">Background 52%</div>
+        <div style="flex:20;background:#FFFFFF;color:#64748B;border-left:1px solid var(--line)">Cards 20%</div>
+        <div style="flex:14;background:#14243B;color:#fff">Navy 14%</div>
+        <div style="flex:8;background:#3978D5;color:#fff">Blue 8%</div>
+        <div style="flex:4;background:#8C8BEA;color:#14243B">IA 4%</div>
+        <div style="flex:2;background:#16A47A"></div>
+      </div>
+    </div>
+    <div class="rule-line">
+      <div><span class="dot" style="background:#14243B"></span><p><b>Navy para estrutura.</b> <span class="muted">Navegação, títulos e superfícies que não mudam.</span></p></div>
+      <div><span class="dot" style="background:#3978D5"></span><p><b>Azul para interação.</b> <span class="muted">Tudo que a pessoa clica, filtra ou confirma.</span></p></div>
+      <div><span class="dot" style="background:#8C8BEA"></span><p><b>Lavanda para IA.</b> <span class="muted">Nunca em ações comuns. Sempre acompanhada do marcador de brilho.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 TIPOGRAFIA ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">05 <b>/ Tipografia</b></div><h2>Duas famílias, papéis claros</h2></div>
+      <p class="muted">Plus Jakarta Sans dá personalidade aos títulos e ao logotipo, com curvas abertas e um toque geométrico. Inter cuida de tudo que precisa ser lido rápido: tabelas, formulários e números.</p>
+    </div>
+    <div class="type-grid">
+      <div class="spec">
+        <div class="tag"><span>Principal · Display</span><span>Google Fonts · OFL</span></div>
+        <div class="big" style="font-family:var(--f-display);font-weight:700">Aa</div>
+        <h3 style="font-size:30px;font-weight:700">Plus Jakarta Sans</h3>
+        <div class="alpha" style="font-family:var(--f-display)">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 &amp;@#%→</div>
+        <div class="weights" style="font-family:var(--f-display)"><span style="font-weight:500">Medium</span><span style="font-weight:600">SemiBold</span><span style="font-weight:700">Bold</span><span style="font-weight:800">ExtraBold</span></div>
+      </div>
+      <div class="spec">
+        <div class="tag"><span>Secundária · Interface</span><span>Google Fonts · OFL</span></div>
+        <div class="big" style="font-family:var(--f-body);font-weight:600">Aa</div>
+        <h3 style="font-size:30px;font-weight:600;font-family:var(--f-body)">Inter</h3>
+        <div class="alpha" style="font-family:var(--f-body)">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br><span class="tab">0123456789 · 1.284 · 94,2%</span></div>
+        <div class="weights" style="font-family:var(--f-body)"><span style="font-weight:400">Regular</span><span style="font-weight:500">Medium</span><span style="font-weight:600">SemiBold</span><span style="font-weight:700">Bold</span></div>
+      </div>
+    </div>
+    <div class="scale">
+      <div class="scale-row"><span class="lb">Display · 48/52<br>Jakarta 700</span><span class="sm" style="font-family:var(--f-display);font-weight:700;font-size:clamp(28px,4vw,48px);letter-spacing:-.03em;line-height:1.1">See beyond the ticket.</span></div>
+      <div class="scale-row"><span class="lb">H1 · 32/40<br>Jakarta 700</span><span class="sm" style="font-family:var(--f-display);font-weight:700;font-size:clamp(22px,3vw,32px);letter-spacing:-.02em">Um novo padrão foi identificado</span></div>
+      <div class="scale-row"><span class="lb">H2 · 20/28<br>Jakarta 600</span><span class="sm" style="font-family:var(--f-display);font-weight:600;font-size:20px">Tickets por categoria</span></div>
+      <div class="scale-row"><span class="lb">Indicador · 28/32<br>Inter 600 tabular</span><span class="sm tab" style="font-weight:600;font-size:28px;letter-spacing:-.02em">3h 42min</span></div>
+      <div class="scale-row"><span class="lb">Corpo · 15/24<br>Inter 400</span><span class="sm" style="font-size:15px">Seu chamado foi analisado. A IA sugeriu a categoria Pagamentos com 96% de confiança.</span></div>
+      <div class="scale-row"><span class="lb">Botão · 14/20<br>Inter 600</span><span class="sm" style="font-size:14px;font-weight:600;color:var(--blue)">Revisar resposta sugerida</span></div>
+      <div class="scale-row"><span class="lb">Rótulo · 11/16<br>Inter 600 · +8%</span><span class="sm" style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Tempo médio de resolução</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 CAMPO DE PERCEPÇÃO ============ -->
+<section class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">06 <b>/ Grafismo</b></div><h2>Campo de Percepção</h2></div>
+      <p class="muted">O elemento gráfico proprietário da SENTRIA. Círculos concêntricos irradiam do núcleo, e pontos ligados por linhas finas mostram como a IA encontra relações entre tickets. Use como fundo de login, capas e cards de insight, sempre com baixa intensidade.</p>
+    </div>
+    <div class="field-grid">
+      <div class="field-tile main"><canvas data-field="hero"></canvas><span class="lbl">Variação A · Campo completo</span></div>
+      <div class="field-tile"><canvas data-field="rings"></canvas><span class="lbl">B · Órbitas</span></div>
+      <div class="field-tile"><canvas data-field="network"></canvas><span class="lbl">C · Rede de sinais</span></div>
+      <div class="field-tile light"><canvas data-field="light"></canvas><span class="lbl">D · Sobre claro</span></div>
+      <div class="field-tile soft"><canvas data-field="soft"></canvas><span class="lbl">E · Card de IA</span></div>
+    </div>
+    <div class="ai-marker">
+      <div class="box">
+        <div class="eyebrow">Marcador de IA</div>
+        <svg viewBox="0 0 24 24" style="width:56px;height:56px;color:#8C8BEA"><use href="#spark"/></svg>
+        <p class="muted" style="font-size:14px">Brilho de quatro pontas com um sinal satélite. Marca todo conteúdo gerado ou apoiado por IA.</p>
+      </div>
+      <div class="box">
+        <div class="eyebrow">Em uso</div>
+        <div class="ai-pills">
+          <span class="ai-pill"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Categorizado por IA</span>
+          <span class="ai-pill"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Resposta sugerida</span>
+          <span class="ai-pill"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Padrão identificado</span>
+          <span class="ai-pill l"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>SENTRIA Intelligence</span>
+        </div>
+        <p class="muted" style="font-size:14px">Discreto e sempre igual: 14–16 px, lavanda, junto ao texto. Nunca animado em loop, nunca como decoração.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 COMPONENTES ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">07 <b>/ Interface</b></div><h2>Componentes essenciais</h2></div>
+      <p class="muted">Cards com raio de 14 px, botões com 9 px, bordas suaves e sombras quase invisíveis. Ícones da biblioteca Lucide com traço de 1,75 px. Status sempre com texto, nunca só com cor.</p>
+    </div>
+    <div class="comp-grid">
+      <div class="panel c7">
+        <h4>Botões</h4>
+        <div class="row">
+          <button class="btn p" type="button"><i data-lucide="plus"></i>Novo ticket</button>
+          <button class="btn s" type="button"><i data-lucide="sliders-horizontal"></i>Filtrar</button>
+          <button class="btn ai" type="button"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Gerar resposta</button>
+          <button class="btn g" type="button">Ver todos<i data-lucide="arrow-right"></i></button>
+        </div>
+        <h4 style="margin-top:8px">Status</h4>
+        <div class="row">
+          <span class="status st-new"><i data-lucide="circle-dot"></i>New</span>
+          <span class="status st-prog"><i data-lucide="loader"></i>In progress</span>
+          <span class="status st-res"><i data-lucide="check-circle-2"></i>Resolved</span>
+          <span class="status st-crit"><i data-lucide="alert-triangle"></i>Critical</span>
+        </div>
+        <h4 style="margin-top:8px">Ícones · Lucide</h4>
+        <div class="icon-list">
+          <div><i data-lucide="layout-dashboard"></i></div><div><i data-lucide="ticket"></i></div><div><i data-lucide="sparkles"></i></div><div><i data-lucide="book-open"></i></div>
+          <div><i data-lucide="bar-chart-3"></i></div><div><i data-lucide="settings"></i></div><div><i data-lucide="users"></i></div><div><i data-lucide="tag"></i></div>
+        </div>
+      </div>
+      <div class="panel c5">
+        <h4>Card SENTRIA Intelligence</h4>
+        <div class="intel">
+          <div class="hd"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>SENTRIA Intelligence</div>
+          <h5>Um novo padrão foi identificado</h5>
+          <p>38 tickets sobre <b>falha no boleto</b> nas últimas 6 horas, todos de clientes do plano Pro após a atualização 4.2. Volume 3,4× acima do normal.</p>
+          <div class="ft"><span class="conf">confiança 92%</span><a href="#apps">Ver 38 tickets relacionados<i data-lucide="arrow-right"></i></a></div>
+        </div>
+        <h4>Indicadores</h4>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+          <div class="kpi"><span class="l"><i data-lucide="timer"></i>Tempo de resolução</span><span class="v">3h 42m</span><span class="d"><span class="delta up">−18%</span>vs. mês anterior</span></div>
+          <div class="kpi"><span class="l"><i data-lucide="smile"></i>CSAT</span><span class="v">94,2%</span><span class="d"><span class="delta up">+2,1 pp</span>vs. mês anterior</span></div>
+        </div>
+      </div>
+      <div class="panel c12">
+        <h4>Design tokens</h4>
+<pre class="tokens"><span class="c">/* sentria.tokens.css — base para desenvolvimento */</span>
+:root {
+  <span class="k">--sn-navy</span>: <span class="v">#14243B</span>;   <span class="k">--sn-blue</span>: <span class="v">#3978D5</span>;   <span class="k">--sn-lavender</span>: <span class="v">#8C8BEA</span>;   <span class="k">--sn-soft</span>: <span class="v">#DCE8F8</span>;
+  <span class="k">--sn-bg</span>: <span class="v">#F5F7FB</span>;     <span class="k">--sn-surface</span>: <span class="v">#FFFFFF</span>; <span class="k">--sn-border</span>: <span class="v">#E4E9F1</span>;   <span class="k">--sn-text-2</span>: <span class="v">#64748B</span>;
+  <span class="k">--sn-success</span>: <span class="v">#16A47A</span>; <span class="k">--sn-warning</span>: <span class="v">#E6A23C</span>; <span class="k">--sn-critical</span>: <span class="v">#D64550</span>;
+  <span class="k">--sn-font-display</span>: <span class="v">"Plus Jakarta Sans"</span>;  <span class="k">--sn-font-ui</span>: <span class="v">"Inter"</span>;
+  <span class="k">--sn-radius-card</span>: <span class="v">14px</span>;  <span class="k">--sn-radius-btn</span>: <span class="v">9px</span>;  <span class="k">--sn-space</span>: <span class="v">4px</span> <span class="c">/* escala 4 · 8 · 12 · 16 · 24 · 32 · 48 */</span>
+  <span class="k">--sn-shadow</span>: <span class="v">0 1px 2px rgb(20 36 59 / .05), 0 8px 24px -12px rgb(20 36 59 / .12)</span>;
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 TOM DE VOZ ============ -->
+<section class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">08 <b>/ Tom de voz</b></div><h2>Inteligente, objetiva e humana</h2></div>
+      <p class="muted">A SENTRIA fala como uma analista experiente: vai direto ao ponto, explica o que encontrou e deixa a decisão com a pessoa. Nunca arrogante, nunca fria, nunca técnica demais.</p>
+    </div>
+    <div class="voice">
+      <div>
+        <div class="msgs">
+          <div class="msg"><span class="s">Análise concluída</span><p>Seu chamado foi analisado.</p></div>
+          <div class="msg"><span class="s">Novo insight</span><p>Um novo padrão foi identificado.</p></div>
+          <div class="msg"><span class="s">Sem documentação</span><p>Não encontramos informações confiáveis na base de conhecimento.</p></div>
+          <div class="msg"><span class="s">Sugestão</span><p>Resposta sugerida pela IA pronta para revisão.</p></div>
+          <div class="msg"><span class="s">Recorrência</span><p>Este problema pode precisar de uma investigação adicional.</p></div>
+        </div>
+        <div class="dosdonts">
+          <div class="dd y"><b>Assim</b><p>Encontramos 12 tickets parecidos. Quer agrupar?</p></div>
+          <div class="dd n"><b>Assim não</b><p>Nossa IA revolucionária detectou anomalias críticas!!</p></div>
+        </div>
+      </div>
+      <div class="slogans">
+        <span class="eyebrow" style="margin-bottom:14px">Slogan</span>
+        <div class="main"><span>See beyond</span><br>the ticket.</div>
+        <div class="tr">Enxergue além do chamado.</div>
+        <ul>
+          <li>Every interaction tells a story.<small>campanhas</small></li>
+          <li>From information to intelligence.<small>apresentações</small></li>
+          <li>Understand more. Decide better.<small>landing page</small></li>
+          <li>Beyond support. Into intelligence.<small>vídeo</small></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 APLICAÇÕES ============ -->
+<section id="apps">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">09 <b>/ Aplicações</b></div><h2>A marca em uso</h2></div>
+      <p class="muted">Referências de aplicação para orientar o produto e os materiais. Todos os números e nomes são exemplos ilustrativos.</p>
+    </div>
+
+    <div class="mock-label"><h3>Dashboard · Overview</h3><span>Web app · 1440 × 900</span></div>
+    <div class="scroll-x">
+      <div class="device">
+        <div class="app">
+          <aside class="side">
+            <div class="brand"><svg viewBox="0 0 64 64"><use href="#mark"/></svg><b>SENTRIA</b></div>
+            <div class="nav on"><i data-lucide="layout-dashboard"></i>Overview</div>
+            <div class="nav"><i data-lucide="ticket"></i>Tickets<span class="badge" style="background:rgba(57,120,213,.25);color:#BFD5F7">128</span></div>
+            <div class="nav ai"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#spark"/></svg>AI Insights<span class="badge">3 novos</span></div>
+            <div class="nav"><i data-lucide="book-open"></i>Knowledge Base</div>
+            <div class="nav"><i data-lucide="bar-chart-3"></i>Analytics</div>
+            <div class="sl">Workspace</div>
+            <div class="nav"><i data-lucide="users"></i>Equipes</div>
+            <div class="nav"><i data-lucide="settings"></i>Settings</div>
+            <div class="foot"><span class="av" style="background:#3978D5">MA</span><div><b>Marina Alves</b><span>Head de Suporte</span></div></div>
+          </aside>
+          <div class="appmain">
+            <div class="topbar">
+              <div><div class="crumb">Workspace Acme · Novembro 2026</div><h2>Bom dia, Marina</h2></div>
+              <div class="search"><i data-lucide="search"></i>Buscar tickets, clientes, artigos<kbd>Ctrl K</kbd></div>
+              <div class="seg"><span>7d</span><span class="on">30d</span><span>90d</span></div>
+              <button class="btn p" type="button" style="padding:8px 14px;font-size:13px"><i data-lucide="plus"></i>Novo ticket</button>
+            </div>
+            <div class="kpis">
+              <div class="kpi"><span class="l"><i data-lucide="inbox"></i>Tickets recebidos</span><span class="v">4.862</span><span class="d"><span class="delta up">+12%</span>vs. out</span></div>
+              <div class="kpi"><span class="l"><i data-lucide="timer"></i>Tempo médio de resolução</span><span class="v">3h 42m</span><span class="d"><span class="delta up">−18%</span>vs. out</span></div>
+              <div class="kpi"><span class="l"><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#8C8BEA"><use href="#spark"/></svg>Categorizados pela IA</span><span class="v">97,6%</span><span class="d"><span class="delta up">+3,4 pp</span>precisão 94%</span></div>
+              <div class="kpi"><span class="l"><i data-lucide="smile"></i>CSAT</span><span class="v">94,2%</span><span class="d"><span class="delta dn">−0,6 pp</span>vs. out</span></div>
+            </div>
+            <div class="grid2">
+              <div class="card">
+                <div class="ch"><div><h4>Volume de tickets</h4><p>Por semana · últimas 12 semanas</p></div><div class="legend"><span><i style="background:#3978D5"></i>Recebidos</span><span><i style="background:#8C8BEA;border-radius:50%"></i>Resolvidos pela IA</span></div></div>
+                <svg id="volChart" viewBox="0 0 560 190" style="width:100%;height:auto" role="img" aria-label="Volume semanal de tickets"></svg>
+              </div>
+              <div class="card">
+                <div class="ch"><div><h4>Categorias detectadas</h4><p>Classificação automática · 30 dias</p></div><span class="ai-pill l" style="font-size:11px;padding:3px 8px"><svg viewBox="0 0 24 24" style="width:12px;height:12px"><use href="#spark"/></svg>IA</span></div>
+                <div class="cats">
+                  <div class="cat"><span class="nm">Pagamentos e cobrança <em>1.556</em></span><span class="pc">32%</span><div class="bar"><i style="width:32%;background:#3978D5"></i></div></div>
+                  <div class="cat"><span class="nm">Acesso e login <em>1.167</em></span><span class="pc">24%</span><div class="bar"><i style="width:24%;background:#5B8FDD"></i></div></div>
+                  <div class="cat"><span class="nm">Integrações e API <em>875</em></span><span class="pc">18%</span><div class="bar"><i style="width:18%;background:#8C8BEA"></i></div></div>
+                  <div class="cat"><span class="nm">Performance <em>681</em></span><span class="pc">14%</span><div class="bar"><i style="width:14%;background:#A9A8F0"></i></div></div>
+                  <div class="cat"><span class="nm">Outros <em>583</em></span><span class="pc">12%</span><div class="bar"><i style="width:12%;background:#C5CFDD"></i></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="grid3">
+              <div class="card" style="overflow:hidden">
+                <div class="ch"><div><h4>Tickets prioritários</h4><p>Ordenados por risco de churn</p></div><a class="btn g" style="padding:4px 0;font-size:12.5px">Ver todos<i data-lucide="arrow-right"></i></a></div>
+                <table class="tk">
+                  <thead><tr><th>ID</th><th>Assunto</th><th>Categoria</th><th>Cliente</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td class="id">#48213</td><td class="sub">Boleto não gerado após upgrade de plano</td><td><span class="cattag"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Pagamentos</span></td><td>Lumen Tech</td><td><span class="status st-crit"><i data-lucide="alert-triangle"></i>Critical</span></td></tr>
+                    <tr><td class="id">#48207</td><td class="sub">Webhook retornando erro 502 intermitente</td><td><span class="cattag"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Integrações</span></td><td>Orbe Pay</td><td><span class="status st-prog"><i data-lucide="loader"></i>In progress</span></td></tr>
+                    <tr><td class="id">#48198</td><td class="sub">Usuários sem acesso via SSO Azure</td><td><span class="cattag"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Acesso</span></td><td>Vértice</td><td><span class="status st-new"><i data-lucide="circle-dot"></i>New</span></td></tr>
+                    <tr><td class="id">#48176</td><td class="sub">Relatório mensal demorando para carregar</td><td><span class="cattag"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Performance</span></td><td>Nuvia</td><td><span class="status st-res"><i data-lucide="check-circle-2"></i>Resolved</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="intel">
+                <div class="hd"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>SENTRIA Intelligence</div>
+                <h5>Um novo padrão foi identificado</h5>
+                <p>38 tickets sobre falha no boleto desde a atualização 4.2, concentrados no plano Pro. Volume 3,4× acima do normal.</p>
+                <p><b>Ação sugerida:</b> abrir incidente com o time de Billing e publicar aviso na central de ajuda.</p>
+                <div class="ft"><span class="conf">confiança 92%</span><a>Ver tickets<i data-lucide="arrow-right"></i></a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mock-label"><h3>Tela de login</h3><span>Campo de Percepção como fundo</span></div>
+    <div class="scroll-x">
+      <div class="device" style="min-width:900px">
+        <div class="login">
+          <div class="art">
+            <canvas data-field="login"></canvas>
+            <div class="lockup-h" style="gap:12px"><svg viewBox="0 0 64 64" style="width:34px;height:34px"><use href="#mark"/></svg><span class="wm" style="font-size:18px;color:#fff">SENTRIA</span></div>
+            <div><h3>Every interaction tells a story.</h3><p>Entre para ver o que seus clientes estão dizendo, mesmo quando não dizem com todas as palavras.</p></div>
+            <div class="q"><svg viewBox="0 0 24 24"><use href="#spark"/></svg><span>Hoje a IA categorizou 1.204 tickets e encontrou 3 novos padrões.</span></div>
+          </div>
+          <div class="form">
+            <div><h4>Entrar na SENTRIA</h4><p class="muted" style="margin-top:6px;font-size:14px">Use o e-mail corporativo da sua equipe.</p></div>
+            <div class="field">E-mail<div class="input f"><i data-lucide="mail"></i>marina@acme.com.br</div></div>
+            <div class="field">Senha<div class="input"><i data-lucide="lock"></i>••••••••••</div></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span class="muted">Manter conectado</span><span style="color:var(--blue);font-weight:600">Esqueci a senha</span></div>
+            <button class="btn p" type="button" style="justify-content:center;padding:12px">Entrar</button>
+            <div class="or">ou</div>
+            <button class="btn s" type="button" style="justify-content:center;padding:12px"><i data-lucide="key-round"></i>Continuar com SSO</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mock-label"><h3>Mobile, papelaria e materiais</h3><span>App · cartão de visita · apresentação · GitHub</span></div>
+    <div class="apps-grid">
+      <div class="phone-stage">
+        <div class="phone"><div class="scr">
+          <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+          <div class="ph"><div><div class="muted" style="font-size:11px">Overview · hoje</div><h5>Olá, Marina</h5></div><span class="av" style="background:#14243B">MA</span></div>
+          <div class="pb">
+            <div class="mk">
+              <div class="kpi"><span class="l">Abertos</span><span class="v">128</span><span class="d"><span class="delta up">−9%</span></span></div>
+              <div class="kpi"><span class="l">Resolução</span><span class="v">3h 42m</span><span class="d"><span class="delta up">−18%</span></span></div>
+            </div>
+            <div class="intel">
+              <div class="hd"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Novo insight</div>
+              <h5>Falha no boleto em alta</h5>
+              <p>38 tickets em 6 horas, todos no plano Pro.</p>
+              <div class="ft"><span class="conf">92%</span><a>Ver<i data-lucide="arrow-right"></i></a></div>
+            </div>
+            <div class="tl">
+              <div><b>#48213</b><span class="status st-crit" style="font-size:10.5px;padding:2px 8px">Critical</span></div>
+              <span class="muted">Boleto não gerado após upgrade</span>
+            </div>
+            <div class="tl">
+              <div><b>#48207</b><span class="status st-prog" style="font-size:10.5px;padding:2px 8px">In progress</span></div>
+              <span class="muted">Webhook com erro 502</span>
+            </div>
+          </div>
+          <div class="tabbar"><i data-lucide="layout-dashboard" class="on"></i><i data-lucide="ticket"></i><svg viewBox="0 0 24 24" style="color:#8C8BEA"><use href="#spark"/></svg><i data-lucide="bar-chart-3"></i></div>
+        </div></div>
+      </div>
+      <div class="stack">
+        <div class="cards-stage">
+          <div class="bcard front"><canvas data-field="card"></canvas><svg viewBox="0 0 64 64" style="width:36px;height:36px"><use href="#mark"/></svg><div><div style="font-family:var(--f-display);font-weight:700;letter-spacing:.14em;font-size:18px">SENTRIA</div><div style="font-size:10px;color:#93A3BC;margin-top:2px">See beyond the ticket.</div></div></div>
+          <div class="bcard back"><div class="who"><b>Marina Alves</b><span>Head de Customer Intelligence</span></div><div class="ct">marina@sentria.ai<br>+55 11 9 4821 3370<br>sentria.ai</div><svg viewBox="0 0 64 64" style="position:absolute;right:18px;top:18px;width:24px;height:24px"><use href="#mark-light"/></svg><span class="strip"></span></div>
+        </div>
+        <div class="deck">
+          <canvas data-field="deck"></canvas>
+          <div class="top"><span class="lk"><svg viewBox="0 0 64 64"><use href="#mark"/></svg>SENTRIA</span><span>Apresentação · Softplan</span></div>
+          <h3>From information to <span>intelligence.</span></h3>
+          <div class="bt"><span>AI-powered Customer Intelligence Platform</span><span class="mono">01 / 18</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="gh">
+      <div class="bar"><i data-lucide="book-marked" style="width:16px;height:16px;color:#9198A1"></i><span>sentria /</span><b>sentria-platform</b><span class="pill">Private</span><span style="margin-left:auto;color:#9198A1;font-size:12px">README.md</span></div>
+      <div class="banner"><canvas data-field="gh"></canvas><div><div class="lockup-h"><svg viewBox="0 0 64 64"><use href="#mark"/></svg><span class="wm">SENTRIA</span></div><p>AI-powered Customer Intelligence Platform · See beyond the ticket.</p></div></div>
+      <div class="badges">
+        <span><i>build</i><em style="background:#16A47A">passing</em></span>
+        <span><i>version</i><em style="background:#3978D5">0.1.0-mvp</em></span>
+        <span><i>AI</i><em style="background:#8C8BEA">categorization</em></span>
+        <span><i>license</i><em style="background:#14243B">proprietary</em></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 REGRAS ============ -->
+<section class="white">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">10 <b>/ Consistência</b></div><h2>O que proteger em cada tela</h2></div>
+      <p class="muted">A identidade funciona quando é previsível. Estas regras valem para produto, marketing e documentação.</p>
+    </div>
+    <div class="rules2">
+      <div class="rl"><h3><i data-lucide="x-circle" style="color:#D64550"></i>Evitar</h3><ul>
+        <li><span>01</span>Robôs, rostos de IA, cérebros eletrônicos ou circuitos como símbolo.</li>
+        <li><span>02</span>Gradientes neon em excesso.</li>
+        <li><span>03</span>Muitos tons de azul competindo entre si.</li>
+        <li><span>04</span>Ícones de estilos diferentes em cada módulo.</li>
+        <li><span>05</span>Interfaces carregadas de informação.</li>
+        <li><span>06</span>Animações que atrapalhem a produtividade.</li>
+      </ul></div>
+      <div class="rl"><h3><i data-lucide="check-circle-2" style="color:#16A47A"></i>Priorizar</h3><ul>
+        <li><span>01</span>Simplicidade e consistência entre todas as telas.</li>
+        <li><span>02</span>Hierarquia visual clara e previsível.</li>
+        <li><span>03</span>Dados fáceis de interpretar.</li>
+        <li><span>04</span>Elementos gráficos com significado.</li>
+        <li><span>05</span>Contraste, legibilidade e acessibilidade (WCAG AA).</li>
+        <li><span>06</span>Experiência fluida e intuitiva.</li>
+      </ul></div>
+    </div>
+    <div class="summary">
+      <div><span>Nome</span><b>SENTRIA</b></div>
+      <div><span>Posicionamento</span><b>Customer Intelligence Platform</b></div>
+      <div><span>Slogan</span><b>See beyond the ticket.</b></div>
+      <div><span>Direção visual</span><b>Modern Intelligence</b></div>
+      <div><span>Cor principal</span><b>Intelligence Blue · #3978D5</b></div>
+      <div><span>Cor de IA</span><b>Insight Lavender · #8C8BEA</b></div>
+      <div><span>Tipografia</span><b>Plus Jakarta Sans + Inter</b></div>
+      <div><span>Símbolo</span><b>Núcleo de Percepção</b></div>
+    </div>
+    <p class="muted" style="margin-top:24px;font-size:13px;max-width:80ch">Nota: SENTRIA é a direção criativa escolhida. Disponibilidade de marca registrada, domínio e nomes semelhantes precisa ser verificada antes de qualquer uso comercial. Domínios e contatos mostrados são ilustrativos.</p>
+  </div>
+</section>
+
+<footer><div class="wrap"><div class="lockup-h"><svg viewBox="0 0 64 64"><use href="#mark"/></svg><span class="wm">SENTRIA</span></div><span>Brand Book v1.0 · Novembro 2026</span></div></footer>
+
+<script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+<script>
+try{ lucide.createIcons({attrs:{'stroke-width':1.75}}); }catch(e){}
+
+/* ---- Volume chart (one scale for bars, line, ticks) ---- */
+(function(){
+  const svg=document.getElementById('volChart'); if(!svg) return;
+  const rec=[182,196,174,210,228,205,241,236,259,248,271,264];
+  const ai =[ 61, 70, 66, 84, 95, 90,112,114,131,129,146,149];
+  const W=560,H=190,L=34,R=8,T=10,B=24,max=300;
+  const cw=(W-L-R)/rec.length, y=v=>T+(H-T-B)*(1-v/max);
+  let s='';
+  [0,100,200,300].forEach(t=>{s+=`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" stroke="#E4E9F1" stroke-width="1"/><text x="${L-8}" y="${y(t)+3.5}" text-anchor="end" font-size="10" fill="#64748B" font-family="Inter">${t}</text>`});
+  rec.forEach((v,i)=>{const x=L+i*cw+cw*.22,w=cw*.56,last=i===rec.length-1;
+    s+=`<rect x="${x}" y="${y(v)}" width="${w}" height="${y(0)-y(v)}" rx="4" fill="${last?'#3978D5':'#C9DBF4'}"/>`;
+    if(i%2===0||last) s+=`<text x="${x+w/2}" y="${H-6}" text-anchor="middle" font-size="10" fill="#64748B" font-family="Inter">S${35+i}</text>`;});
+  const pts=ai.map((v,i)=>[L+i*cw+cw/2,y(v)]);
+  s+=`<path d="M${pts.map(p=>p.join(',')).join(' L')} L${pts[pts.length-1][0]},${y(0)} L${pts[0][0]},${y(0)} Z" fill="rgba(140,139,234,.14)"/>`;
+  s+=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#8C8BEA" stroke-width="2.2" stroke-linejoin="round"/>`;
+  const e=pts[pts.length-1];
+  s+=`<circle cx="${e[0]}" cy="${e[1]}" r="4.5" fill="#fff" stroke="#8C8BEA" stroke-width="2.2"/>`;
+  s+=`<text x="${e[0]-8}" y="${y(rec[rec.length-1])-8}" text-anchor="end" font-size="10.5" font-weight="600" fill="#14243B" font-family="Inter">264 · 56% pela IA</text>`;
+  svg.innerHTML=s;
+})();
+
+/* ---- Perception Field generator ---- */
+(function(){
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const P={
+    cover:{cx:.78,cy:.48,rings:9,step:.075,nodes:70,dark:true,spread:.62,anim:true},
+    statement:{cx:1.0,cy:1.0,rings:7,step:.16,nodes:22,dark:true,spread:.9},
+    hero:{cx:.5,cy:.5,rings:10,step:.065,nodes:60,dark:true,spread:.55,anim:true},
+    rings:{cx:.5,cy:.5,rings:6,step:.11,nodes:0,dark:true,spread:.5},
+    network:{cx:.5,cy:.5,rings:0,step:.1,nodes:34,dark:true,spread:.7,link:.22},
+    light:{cx:.5,cy:.5,rings:6,step:.1,nodes:20,dark:false,spread:.5},
+    soft:{cx:.85,cy:.15,rings:6,step:.14,nodes:14,dark:false,soft:true,spread:.7},
+    login:{cx:.82,cy:.32,rings:8,step:.09,nodes:44,dark:true,spread:.6,anim:true},
+    card:{cx:1.0,cy:.0,rings:6,step:.16,nodes:12,dark:true,spread:.9},
+    deck:{cx:.8,cy:.5,rings:8,step:.085,nodes:46,dark:true,spread:.6},
+    gh:{cx:.85,cy:.5,rings:7,step:.11,nodes:30,dark:true,spread:.6}
+  };
+  function rng(seed){let s=seed;return()=>((s=Math.imul(s^s>>>15,1|s)+0x6D2B79F5|0,((s^s>>>14)>>>0)/4294967296))}
+  const items=[];
+  document.querySelectorAll('canvas[data-field]').forEach((c,idx)=>{
+    const o=P[c.dataset.field]; if(!o) return;
+    const r=rng(1013+idx*97); const nodes=[];
+    for(let i=0;i<o.nodes;i++){
+      const a=r()*Math.PI*2, d=Math.pow(r(),.75)*o.spread;
+      nodes.push({a,d,s:r()<.12?2.6:1+r()*1.2,hot:r()<.1,ph:r()*6.28,sp:(r()-.5)*.00012});
+    }
+    items.push({c,o,nodes});
+  });
+  function draw(it,t){
+    const {c,o,nodes}=it; const w=c.clientWidth,h=c.clientHeight; if(!w||!h) return;
+    const dpr=Math.min(2,devicePixelRatio||1);
+    if(c.width!==Math.round(w*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);}
+    const g=c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,w,h);
+    const cx=o.cx*w, cy=o.cy*h, S=Math.max(w,h);
+    // glow
+    if(o.dark){const gr=g.createRadialGradient(cx,cy,0,cx,cy,S*.55);gr.addColorStop(0,'rgba(57,120,213,.22)');gr.addColorStop(.45,'rgba(140,139,234,.08)');gr.addColorStop(1,'rgba(13,24,41,0)');g.fillStyle=gr;g.fillRect(0,0,w,h);}
+    // rings
+    for(let i=1;i<=o.rings;i++){
+      const rr=i*o.step*S + (o.anim&&!reduce? Math.sin(t*.0004+i)*1.5:0);
+      const al=o.dark? (0.30-i*0.022):(0.42-i*0.04);
+      g.beginPath(); g.arc(cx,cy,rr,0,Math.PI*2);
+      g.strokeStyle= i%3===0? `rgba(140,139,234,${Math.max(al,.05)})` : (o.dark?`rgba(111,162,236,${Math.max(al*.8,.04)})`:`rgba(57,120,213,${Math.max(al*.6,.05)})`);
+      g.lineWidth= i===2?1.4:1; g.stroke();
+    }
+    // nodes
+    const pts=nodes.map(n=>{const a=n.a+(o.anim&&!reduce?t*n.sp:0);return{x:cx+Math.cos(a)*n.d*S,y:cy+Math.sin(a)*n.d*S*.9,n}});
+    const link=(o.link||.14)*S;
+    g.lineWidth=.8;
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
+      if(d<link){const al=(1-d/link)*(o.dark?.32:.28);g.strokeStyle=o.soft?`rgba(140,139,234,${al})`:(o.dark?`rgba(169,168,245,${al})`:`rgba(57,120,213,${al})`);g.beginPath();g.moveTo(pts[i].x,pts[i].y);g.lineTo(pts[j].x,pts[j].y);g.stroke();}
+    }
+    pts.forEach(p=>{
+      const tw=o.anim&&!reduce?(.65+.35*Math.sin(t*.0015+p.n.ph)):1;
+      if(p.n.hot){g.beginPath();g.arc(p.x,p.y,p.n.s*3.2,0,6.283);g.fillStyle=o.dark?`rgba(140,139,234,${.18*tw})`:'rgba(140,139,234,.18)';g.fill();}
+      g.beginPath();g.arc(p.x,p.y,p.n.s,0,6.283);
+      g.fillStyle=o.dark?(p.n.hot?`rgba(255,255,255,${.95*tw})`:`rgba(205,214,245,${.7*tw})`):(p.n.hot?'#8C8BEA':'rgba(57,120,213,.55)');
+      g.fill();
+    });
+    // core
+    if(o.rings){g.beginPath();g.arc(cx,cy,4,0,6.283);g.fillStyle=o.dark?'#C9C8FA':'#14243B';g.fill();}
+  }
+  function frame(t){items.forEach(it=>{if(it.o.anim&&!reduce&&it.visible!==false) draw(it,t)}); requestAnimationFrame(frame);}
+  function all(){items.forEach(it=>draw(it,0));}
+  all(); addEventListener('resize',all);
+  if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>es.forEach(e=>{const it=items.find(i=>i.c===e.target);if(it)it.visible=e.isIntersecting}));items.forEach(it=>io.observe(it.c));}
+  if(!reduce) requestAnimationFrame(frame);
+})();
+</script>
