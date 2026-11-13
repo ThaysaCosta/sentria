@@ -21,6 +21,8 @@ A **SENTRIA** recebe chamados de suporte, entende cada um com IA e transforma o 
 
 > **Exemplo real da demonstração:** sem nenhuma regra escrita para isso, a SENTRIA percebe que *"49 tickets sobre falha relacionada a boleto nas últimas 24 horas"*, 100% na versão 4.2 e concentrados no plano Pro, estão cerca de 6× acima do normal. Ela une os chamados que a IA tinha separado entre "Pagamentos" e "Erros no sistema" e sugere abrir um incidente com o time de Billing.
 
+> 🎨 **Identidade visual e direção de marca:** a SENTRIA tem um [brand book próprio](docs/brand/sentria-brand-book.html) (conceito, símbolo, paleta, tipografia, tom de voz e aplicações), que serviu de especificação para a interface. Para vê-lo formatado, baixe o arquivo e abra no navegador.
+
 ## Sumário
 
 - [Funcionalidades](#funcionalidades)
@@ -209,7 +211,7 @@ Além dos testes unitários, a página **Analytics › Qualidade da classificaç
 
 ## Desenvolvimento com IA
 
-A ideia, o posicionamento e a identidade visual (brand book e logos em `docs/brand/`) foram definidos por mim. A implementação foi desenvolvida em par com o **Claude Code**: arquitetura, backend, motor de IA, frontend, testes e documentação foram construídos de forma iterativa, com validação no navegador e testes automatizados a cada etapa.
+A ideia, o posicionamento e a identidade visual ([brand book](docs/brand/sentria-brand-book.html) e logos) foram definidos por mim. A implementação foi desenvolvida em par com o **Claude Code**: arquitetura, backend, motor de IA, frontend, testes e documentação foram construídos de forma iterativa, com validação no navegador e testes automatizados a cada etapa.
 
 ---
 
