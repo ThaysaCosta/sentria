@@ -1,5 +1,5 @@
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { AiMark, Logo, PerceptionField } from '../components/ui';
 import { useAuth } from '../lib/auth';
@@ -15,6 +15,14 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // Só mostra o acesso de exemplo quando o servidor tem contas de demonstração.
+  const [demo, setDemo] = useState(false);
+  useEffect(() => {
+    fetch('/api/health')
+      .then((r) => r.json())
+      .then((d: { demo?: boolean }) => setDemo(Boolean(d.demo)))
+      .catch(() => setDemo(false));
+  }, []);
 
   if (ready && user) return <Navigate to={from} replace />;
 
@@ -70,27 +78,29 @@ export function Login() {
           <button className="btn btn-primary btn-lg btn-block" disabled={loading}>
             {loading ? <span className="spinner" /> : null} Entrar <ArrowRight size={16} />
           </button>
-          <div className="demo-box">
-            <div className="row" style={{ marginBottom: 6 }}>
-              <Sparkles size={15} color="var(--sn-blue)" />
-              <strong>Ambiente de demonstração</strong>
+          {demo && (
+            <div className="demo-box">
+              <div className="row" style={{ marginBottom: 6 }}>
+                <Sparkles size={15} color="var(--sn-blue)" />
+                <strong>Ambiente de demonstração</strong>
+              </div>
+              <p className="muted small" style={{ marginBottom: 10 }}>
+                Dados fictícios com 90 dias de histórico. Acesso: <span className="mono">{DEMO.email}</span> · <span className="mono">{DEMO.password}</span>
+              </p>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                disabled={loading}
+                onClick={() => {
+                  setEmail(DEMO.email);
+                  setPassword(DEMO.password);
+                  void submit(undefined, DEMO);
+                }}
+              >
+                Entrar como Marina (Head de Suporte)
+              </button>
             </div>
-            <p className="muted small" style={{ marginBottom: 10 }}>
-              Dados fictícios com 90 dias de histórico. Acesso: <span className="mono">{DEMO.email}</span> · <span className="mono">{DEMO.password}</span>
-            </p>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              disabled={loading}
-              onClick={() => {
-                setEmail(DEMO.email);
-                setPassword(DEMO.password);
-                void submit(undefined, DEMO);
-              }}
-            >
-              Entrar como Marina (Head de Suporte)
-            </button>
-          </div>
+          )}
           <p className="small muted" style={{ textAlign: 'center' }}>
             É cliente? <Link to="/portal">Abra ou acompanhe um chamado no portal</Link>
           </p>

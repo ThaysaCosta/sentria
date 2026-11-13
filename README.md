@@ -83,7 +83,8 @@ Num produto B2B, o cliente não quer sair da tela em que está trabalhando para 
 | **Resposta em massa** | A partir de um incidente detectado, um comunicado sugerido pela IA é enviado a todos os tickets afetados, personalizado com o nome de cada cliente. |
 | **Resumo executivo** | Texto pronto para a liderança, gerado a partir dos indicadores e padrões da semana (Claude quando configurado, modelo local caso contrário). |
 | **Analytics** | Volume diário, sentimento, mapa de calor dia × hora, SLA, canais, equipe, clientes em risco e **qualidade da IA**: matriz de confusão, precisão, recall, F1, calibração e **taxa de aceitação** das respostas sugeridas. |
-| **Portal do cliente** | Canal secundário para abrir e acompanhar chamados por protocolo + e-mail, com conversa e avaliação (CSAT). |
+| **Gestão de equipe** | O administrador convida atendentes (senha temporária exibida uma única vez e troca obrigatória no primeiro acesso), define papéis, redefine senhas e desativa acessos. Desativar encerra as sessões na hora e devolve os tickets abertos para a fila. |
+| **Portal do cliente** | Canal secundário para abrir e acompanhar chamados, com conversa e avaliação (CSAT). O link de acompanhamento usa um token assinado, sem e-mail na URL. |
 | **Dados** | Importação de CSV com detecção automática de colunas, validação linha a linha e prévia da IA. Exportação em CSV (Excel) e JSON. Reprocessamento em massa. |
 | **Base de conhecimento** | CRUD de artigos com busca semântica (TF-IDF), que alimenta as sugestões do widget, do portal e do atendimento. |
 
@@ -215,15 +216,16 @@ SENTRIA/
 
 | Camada | Proteção |
 |---|---|
-| Autenticação | Senhas com `scrypt` e comparação em tempo constante; JWT com expiração de 12h; em produção, segredo nunca padrão (gerado se `JWT_SECRET` faltar); login limitado a 10 tentativas a cada 15 min por IP. |
+| Autenticação | Senhas com `scrypt` e sal; política mínima (8+ caracteres, letras e números); login com tempo constante (não revela quais e-mails existem) e limitado a 10 tentativas a cada 15 min por IP; JWT HS256 com expiração de 12h e segredo nunca padrão em produção. |
+| Sessões e permissões | Cada requisição confere o usuário no banco: desativar, trocar a senha ou mudar o papel encerra as sessões antigas na hora (versão do token). Ações administrativas exigem papel de admin; a equipe nunca fica sem administrador; ninguém se desativa ou se rebaixa. |
 | Entrada de dados | Toda entrada validada com Zod; consultas SQL 100% parametrizadas (ordenação e filtros por lista de valores permitidos); corpo limitado a 200 KB (10 MB só na importação de CSV); erros sem detalhes internos. |
 | Navegador | Cabeçalhos de segurança e Content-Security-Policy restritiva (sem scripts inline), `X-Frame-Options: DENY`, `nosniff`, HSTS em HTTPS. React escapa todo conteúdo; o widget escapa HTML manualmente. |
-| Rotas públicas | *Rate limit* por IP; CORS aberto apenas para as rotas do widget/portal (sem cookies); acesso a um chamado só com protocolo **e** o e-mail de quem abriu. |
+| Rotas públicas | *Rate limit* por IP; CORS aberto apenas para as rotas do widget/portal (sem cookies); acesso a um chamado só com o e-mail de quem abriu ou com um token HMAC do link de acompanhamento (comparação em tempo constante; o e-mail nunca vai na URL). |
 | Privacidade (LGPD) | O widget mostra ao usuário o que será anexado, não envia query string nem conteúdo de formulários, e trunca mensagens de erro. |
 | Exportação | Proteção contra *CSV injection* (células iniciadas por `= + - @` são neutralizadas). |
 | Dependências | `npm audit` sem vulnerabilidades conhecidas. |
 
-**Limites conhecidos (fora do escopo da demo):** o token fica no `localStorage` (em produção, um cookie `HttpOnly` reduz o impacto de XSS); o *rate limit* é em memória (com várias instâncias, usar Redis); a demo pública usa credenciais conhecidas de propósito, e os dados são recriados a cada reinício.
+**Limites conhecidos (fora do escopo da demo):** o token fica no `localStorage` (em produção, um cookie `HttpOnly` reduz o impacto de XSS); o *rate limit* é em memória (com várias instâncias, usar Redis); convites são entregues pelo admin (em produção, por e-mail com link de ativação). Na demo pública (`DEMO_MODE=1`), as contas de exemplo têm credenciais conhecidas de propósito e ficam protegidas contra desativação e troca de senha; os dados são recriados a cada reinício.
 
 ## API
 
@@ -248,13 +250,15 @@ Todas as rotas abaixo de `/api`, exceto `auth/login` e `public/*`, exigem `Autho
 | CRUD | `/kb` | Base de conhecimento (com busca semântica) |
 | POST | `/data/import/preview` · `/data/import` | Importação de CSV |
 | POST | `/data/reprocess` · `/data/reset` | Reprocessamento com IA · restaurar demo (admin) |
-| POST | `/public/suggest` · `/public/tickets` | Widget e portal: sugestões e abertura de chamado (aceita `context`) |
-| GET/POST | `/public/tickets/:protocolo` (+ `/messages`, `/csat`) | Acompanhamento, resposta e avaliação |
+| GET/POST/PATCH | `/team` · `/team/:id` · `/team/:id/reset-password` | Equipe: listar, convidar, alterar papel/status, nova senha temporária (admin) |
+| POST | `/auth/change-password` | Troca da própria senha (encerra as outras sessões) |
+| POST | `/public/suggest` · `/public/tickets` | Widget e portal: sugestões e abertura de chamado (aceita `context`; devolve o token de acompanhamento) |
+| POST | `/public/tickets/:protocolo/access` (+ `/messages`, `/csat`) | Acompanhamento, resposta e avaliação (com e-mail ou token) |
 
 ## Testes e qualidade
 
 ```bash
-npm test          # 31 testes: classificador, sentimento, prioridade, churn, insights, CSV e segurança
+npm test          # 34 testes: classificador, sentimento, prioridade, churn, insights, CSV, senhas e segurança
 npm run typecheck # TypeScript strict no backend e no frontend
 ```
 

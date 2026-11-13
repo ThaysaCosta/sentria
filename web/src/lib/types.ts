@@ -9,8 +9,9 @@ export interface User {
   name: string;
   email: string;
   role: 'admin' | 'agent';
-  title?: string;
+  title?: string | null;
   open_tickets?: number;
+  mustChangePassword?: boolean;
 }
 
 export interface Customer {

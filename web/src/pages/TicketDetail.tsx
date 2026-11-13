@@ -416,6 +416,9 @@ export function TicketDetail() {
                 onChange={(e) => patch({ assignee_id: e.target.value ? Number(e.target.value) : null }, 'Responsável atualizado.')}
               >
                 <option value="">Ninguém</option>
+                {t.assignee_id && !users?.some((u) => u.id === t.assignee_id) && (
+                  <option value={t.assignee_id} disabled>{t.assignee_name ?? 'Usuário'} (desativado)</option>
+                )}
                 {users?.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
               </select>
             </label>

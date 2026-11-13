@@ -115,6 +115,17 @@ export function migrate(): void {
   // Migrações incrementais para bancos criados por versões anteriores.
   const columns = (db.prepare('PRAGMA table_info(tickets)').all() as { name: string }[]).map((c) => c.name);
   if (!columns.includes('context')) db.exec('ALTER TABLE tickets ADD COLUMN context TEXT');
+
+  // Gestão de equipe: desativação, senha temporária, último acesso e revogação de sessões.
+  const userColumns = (db.prepare('PRAGMA table_info(users)').all() as { name: string }[]).map((c) => c.name);
+  const addUserColumn = (name: string, ddl: string) => {
+    if (!userColumns.includes(name)) db.exec(`ALTER TABLE users ADD COLUMN ${ddl}`);
+  };
+  addUserColumn('active', 'active INTEGER NOT NULL DEFAULT 1');
+  addUserColumn('must_change_password', 'must_change_password INTEGER NOT NULL DEFAULT 0');
+  addUserColumn('last_login_at', 'last_login_at TEXT');
+  addUserColumn('token_version', 'token_version INTEGER NOT NULL DEFAULT 0');
+  addUserColumn('protected', 'protected INTEGER NOT NULL DEFAULT 0');
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

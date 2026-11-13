@@ -12,6 +12,7 @@ import { Overview } from './pages/Overview';
 import { Portal } from './pages/Portal';
 import { PortalTrack } from './pages/PortalTrack';
 import { Settings } from './pages/Settings';
+import { Team } from './pages/Team';
 import { TicketDetail } from './pages/TicketDetail';
 import { Tickets } from './pages/Tickets';
 
@@ -44,6 +45,7 @@ export function App() {
         <Route path="analytics" element={<Analytics />} />
         <Route path="kb" element={<KnowledgeBase />} />
         <Route path="dados" element={<DataHub />} />
+        <Route path="equipe" element={<Team />} />
         <Route path="configuracoes" element={<Settings />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

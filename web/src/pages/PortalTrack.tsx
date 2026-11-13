@@ -1,10 +1,9 @@
 import { ArrowLeft, Send } from 'lucide-react';
-import { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Empty, Logo, Skeleton, StatusBadge } from '../components/ui';
 import { api } from '../lib/api';
 import { fmtDateTime, initials } from '../lib/domain';
-import { useApi } from '../lib/hooks';
 import type { Status } from '../lib/types';
 
 interface PublicTicket {
@@ -18,6 +17,7 @@ interface PublicTicket {
   csat: number | null;
   requester_name: string;
   resolved_by_ai: boolean;
+  accessToken: string;
   messages: { author_type: string; author_name: string; body: string; created_at: string }[];
 }
 
@@ -27,24 +27,59 @@ const STEPS: { key: Status[]; label: string }[] = [
   { key: ['resolved', 'closed'], label: 'Resolvido' },
 ];
 
+/**
+ * Acompanhamento do chamado pelo cliente. O acesso é por um token assinado no link
+ * (?t=...) ou pelo e-mail digitado aqui: o e-mail nunca vai para a URL.
+ */
 export function PortalTrack() {
   const [params] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const protocol = params.get('protocolo') ?? '';
-  const email = params.get('email') ?? '';
-  const path = protocol && email ? `/public/tickets/${encodeURIComponent(protocol)}?email=${encodeURIComponent(email)}` : null;
-  const { data, error, loading, reload } = useApi<PublicTicket>(path);
+  const token = params.get('t') ?? '';
+  const stateEmail = (location.state as { email?: string } | null)?.email ?? '';
+
+  const [data, setData] = useState<PublicTicket | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
   const [reply, setReply] = useState('');
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
+  const load = useCallback(
+    async (cred: { token?: string; email?: string }) => {
+      if (!protocol) return;
+      setLoading(true);
+      setError(null);
+      try {
+        const d = await api<PublicTicket>(`/public/tickets/${encodeURIComponent(protocol)}/access`, { body: cred });
+        setData(d);
+        // Troca o e-mail pelo token na URL, para recarregar/compartilhar o link sem expor o e-mail.
+        if (!token) navigate(`/portal/acompanhar?protocolo=${encodeURIComponent(d.protocol)}&t=${d.accessToken}`, { replace: true });
+      } catch (e) {
+        setError((e as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [protocol, token, navigate],
+  );
+
+  useEffect(() => {
+    if (token) void load({ token });
+    else if (stateEmail) void load({ email: stateEmail });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [protocol, token]);
+
   async function send() {
-    if (!reply.trim()) return;
+    if (!reply.trim() || !data) return;
     setBusy(true);
     try {
-      await api(`/public/tickets/${encodeURIComponent(protocol)}/messages`, { body: { email, body: reply } });
+      await api(`/public/tickets/${encodeURIComponent(protocol)}/messages`, { body: { token: data.accessToken, body: reply } });
       setReply('');
       setMsg('Mensagem enviada. O time foi notificado.');
-      reload();
+      await load({ token: data.accessToken });
     } catch (e) {
       setMsg((e as Error).message);
     } finally {
@@ -53,13 +88,19 @@ export function PortalTrack() {
   }
 
   async function rate(score: number) {
+    if (!data) return;
     try {
-      await api(`/public/tickets/${encodeURIComponent(protocol)}/csat`, { body: { email, score } });
+      await api(`/public/tickets/${encodeURIComponent(protocol)}/csat`, { body: { token: data.accessToken, score } });
       setMsg('Obrigado pela avaliação!');
-      reload();
+      await load({ token: data.accessToken });
     } catch (e) {
       setMsg((e as Error).message);
     }
+  }
+
+  function submitEmail(e: FormEvent) {
+    e.preventDefault();
+    void load({ email: email.trim() });
   }
 
   const stepIndex = data ? STEPS.findIndex((s) => s.key.includes(data.status)) : 0;
@@ -76,13 +117,19 @@ export function PortalTrack() {
         <Link to="/portal" className="btn btn-ghost btn-sm" style={{ marginBottom: 12 }}>
           <ArrowLeft size={15} /> Voltar
         </Link>
-        {!path ? (
-          <div className="card"><Empty title="Informe o protocolo e o e-mail">Use o formulário da central de ajuda para consultar um chamado.</Empty></div>
+        {!protocol ? (
+          <div className="card"><Empty title="Informe o protocolo">Use o formulário da central de ajuda para consultar um chamado.</Empty></div>
         ) : loading && !data ? (
           <Skeleton h={320} style={{ borderRadius: 14 }} />
-        ) : error ? (
-          <div className="card"><Empty title="Chamado não encontrado">{error}</Empty></div>
-        ) : data ? (
+        ) : !data ? (
+          <form className="card card-pad stack" onSubmit={submitEmail} style={{ maxWidth: 460 }}>
+            <h2>Acompanhar chamado</h2>
+            <p className="small muted">Protocolo <span className="mono">{protocol}</span>. Para sua segurança, confirme o e-mail usado na abertura.</p>
+            {error && <div className="alert alert-error">{error}</div>}
+            <input className="input" type="email" required placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="E-mail" />
+            <button className="btn btn-primary">Consultar</button>
+          </form>
+        ) : (
           <div className="stack" style={{ gap: 16 }}>
             <section className="card card-pad stack">
               <div className="row-between wrap">
@@ -143,7 +190,7 @@ export function PortalTrack() {
               </div>
             </section>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );

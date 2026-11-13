@@ -7,6 +7,8 @@ interface AuthCtx {
   ready: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  /** Atualiza a sessão (ex.: após trocar a senha, o servidor devolve um token novo). */
+  setSession: (token: string, user: User) => void;
 }
 
 const Ctx = createContext<AuthCtx | null>(null);
@@ -58,7 +60,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(r.user);
   }, []);
 
-  const value = useMemo(() => ({ user, ready, login, logout }), [user, ready, login, logout]);
+  const setSession = useCallback((token: string, u: User) => {
+    tokenStore.set(token);
+    setUser(u);
+  }, []);
+
+  const value = useMemo(() => ({ user, ready, login, logout, setSession }), [user, ready, login, logout, setSession]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

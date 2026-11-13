@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { ai } from '../ai/index.js';
 import { detectInsights } from '../ai/insights.js';
-import { requireAuth, signToken, verifyPassword, type AuthUser } from '../auth.js';
-import { all, get } from '../db/database.js';
+import { DUMMY_HASH, demoMode, hashPassword, passwordProblem, requireAdmin, requireAuth, signToken, verifyPassword, type AuthUser } from '../auth.js';
+import { all, get, nowIso, run } from '../db/database.js';
 import { CATEGORIES } from '../domain.js';
 import { detail, overview } from '../services/analytics.js';
 import { rateLimit } from '../utils/security.js';
@@ -18,23 +18,63 @@ const Login = z.object({ email: z.string().trim().toLowerCase().email(), passwor
 // Proteção contra tentativa de senhas em massa: 10 tentativas a cada 15 minutos por IP.
 const loginLimiter = rateLimit({ max: 10, windowMs: 15 * 60_000, message: 'Muitas tentativas de login. Aguarde alguns minutos e tente novamente.' });
 
+interface LoginRecord extends AuthUser {
+  password_hash: string;
+  title: string | null;
+  active: number;
+  must_change_password: number;
+  token_version: number;
+}
+
+const publicUser = (u: LoginRecord) => ({
+  id: u.id,
+  name: u.name,
+  email: u.email,
+  role: u.role,
+  title: u.title,
+  mustChangePassword: Boolean(u.must_change_password),
+});
+
 authRouter.post('/login', loginLimiter, (req, res) => {
   const { email, password } = Login.parse(req.body);
-  const user = get<AuthUser & { password_hash: string; title: string }>(
-    'SELECT id, name, email, role, title, password_hash FROM users WHERE email = ?',
+  const user = get<LoginRecord>(
+    'SELECT id, name, email, role, title, password_hash, active, must_change_password, token_version FROM users WHERE email = ?',
     email,
   );
-  if (!user || !verifyPassword(password, user.password_hash)) {
-    return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
-  }
-  const { password_hash: _ignored, ...publicUser } = user;
-  res.json({ token: signToken(publicUser), user: publicUser });
+  // Sempre verifica um hash (mesmo sem usuário) para o tempo de resposta não revelar quais e-mails existem.
+  const ok = verifyPassword(password, user?.password_hash ?? DUMMY_HASH);
+  if (!user || !ok) return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
+  if (!user.active) return res.status(403).json({ error: 'Este usuário foi desativado. Fale com o administrador da sua equipe.' });
+  run('UPDATE users SET last_login_at = ? WHERE id = ?', nowIso(), user.id);
+  res.json({ token: signToken(user), user: publicUser(user) });
 });
 
 authRouter.get('/me', requireAuth, (req, res) => {
-  const user = get('SELECT id, name, email, role, title FROM users WHERE id = ?', req.user!.id);
+  const user = get<LoginRecord>('SELECT * FROM users WHERE id = ?', req.user!.id);
   if (!user) return res.status(401).json({ error: 'Usuário não encontrado.' });
-  res.json({ user });
+  res.json({ user: publicUser(user) });
+});
+
+const ChangePassword = z.object({ current: z.string().min(1, 'Informe a senha atual.'), next: z.string() });
+
+/** Troca da própria senha. Encerra as outras sessões e devolve um token novo. */
+authRouter.post('/change-password', requireAuth, loginLimiter, (req, res) => {
+  const { current, next } = ChangePassword.parse(req.body);
+  const user = get<LoginRecord & { protected: number }>('SELECT * FROM users WHERE id = ?', req.user!.id)!;
+  if (!verifyPassword(current, user.password_hash)) return res.status(400).json({ error: 'A senha atual está incorreta.' });
+  if (demoMode() && user.protected) {
+    return res.status(403).json({ error: 'Na demonstração pública, a senha das contas de exemplo não pode ser alterada.' });
+  }
+  const problem = passwordProblem(next);
+  if (problem) return res.status(400).json({ error: problem });
+  if (verifyPassword(next, user.password_hash)) return res.status(400).json({ error: 'A nova senha precisa ser diferente da atual.' });
+  run(
+    'UPDATE users SET password_hash = ?, must_change_password = 0, token_version = token_version + 1 WHERE id = ?',
+    hashPassword(next),
+    user.id,
+  );
+  const updated = get<LoginRecord>('SELECT * FROM users WHERE id = ?', user.id)!;
+  res.json({ token: signToken(updated), user: publicUser(updated) });
 });
 
 // ------------------------------------------------------------------ Metadados e IA
@@ -42,11 +82,12 @@ authRouter.get('/me', requireAuth, (req, res) => {
 export const metaRouter = Router();
 
 metaRouter.get('/users', (_req, res) => {
+  // Lista usada para atribuir tickets: só usuários ativos.
   res.json(
     all(
       `SELECT u.id, u.name, u.email, u.role, u.title,
          (SELECT COUNT(*) FROM tickets t WHERE t.assignee_id = u.id AND t.status IN ('new','in_progress','waiting')) AS open_tickets
-       FROM users u ORDER BY u.name`,
+       FROM users u WHERE u.active = 1 ORDER BY u.name`,
     ),
   );
 });
@@ -219,7 +260,7 @@ kbRouter.put('/:id', (req, res) => {
   res.json(get('SELECT * FROM kb_articles WHERE id = ?', id));
 });
 
-kbRouter.delete('/:id', (req, res) => {
+kbRouter.delete('/:id', requireAdmin, (req, res) => {
   get('DELETE FROM kb_articles WHERE id = ? RETURNING id', Number(req.params.id));
   ai.refreshKnowledgeBase();
   res.status(204).end();

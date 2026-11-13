@@ -16,6 +16,7 @@ import {
   type TicketRow,
 } from '../services/tickets.js';
 import { toCsv } from '../utils/csv.js';
+import { HttpError } from '../utils/http.js';
 
 export const ticketsRouter = Router();
 
@@ -199,6 +200,9 @@ const CreateTicket = z.object({
 
 ticketsRouter.post('/', async (req, res) => {
   const body = CreateTicket.parse(req.body);
+  if (body.customerId && !get('SELECT id FROM customers WHERE id = ?', body.customerId)) {
+    throw new HttpError(400, 'Cliente não encontrado.');
+  }
   const { id, analysis } = await createTicket({ ...body, origin: 'agent', actor: req.user!.name });
   res.status(201).json({ ticket: serializeTicket(findTicket(id)!), analysis });
 });
@@ -241,7 +245,8 @@ function patchTicket(id: number, patch: z.infer<typeof PatchTicket>, actor: stri
       ai.learnCorrection(t.subject, t.description, patch.category as CategoryKey);
     }
     if (patch.assignee_id !== undefined && patch.assignee_id !== t.assignee_id) {
-      const user = patch.assignee_id ? get<{ name: string }>('SELECT name FROM users WHERE id = ?', patch.assignee_id) : null;
+      const user = patch.assignee_id ? get<{ name: string }>('SELECT name FROM users WHERE id = ? AND active = 1', patch.assignee_id) : null;
+      if (patch.assignee_id && !user) throw new HttpError(400, 'Responsável inválido ou desativado.');
       run('UPDATE tickets SET assignee_id = ?, updated_at = ? WHERE id = ?', patch.assignee_id, now, id);
       addEvent(id, 'assigned', actor, { assignee: user?.name ?? null });
     }

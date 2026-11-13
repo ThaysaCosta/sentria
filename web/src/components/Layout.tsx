@@ -10,6 +10,7 @@ import {
   Plus,
   Search,
   Settings,
+  Users,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
@@ -17,6 +18,7 @@ import { useAuth } from '../lib/auth';
 import { initials } from '../lib/domain';
 import { useApi } from '../lib/hooks';
 import type { AiStatus } from '../lib/types';
+import { ChangePasswordModal } from './ChangePassword';
 import { AiMark, Logo } from './ui';
 
 interface NavCounts {
@@ -28,6 +30,7 @@ export function Layout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const [account, setAccount] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const { data: status } = useApi<AiStatus>('/ai/status');
   const { data: counts } = useApi<{ kpis: { open: { value: number } }; insightCount: number }>('/analytics/overview?days=7');
@@ -53,6 +56,7 @@ export function Layout() {
   ];
   const workspace = [
     { to: '/dados', label: 'Dados', icon: Database },
+    { to: '/equipe', label: 'Equipe', icon: Users },
     { to: '/configuracoes', label: 'Configurações', icon: Settings },
   ];
 
@@ -90,11 +94,18 @@ export function Layout() {
         </div>
         <div className="sidebar-footer">
           <div className="user-chip">
-            <div className="avatar">{initials(user?.name ?? '')}</div>
-            <div className="grow">
-              <div className="name truncate">{user?.name}</div>
-              <div className="role truncate">{user?.title}</div>
-            </div>
+            <button
+              className="row grow"
+              style={{ gap: 10, border: 'none', background: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', minWidth: 0 }}
+              onClick={() => setAccount(true)}
+              title="Minha conta e senha"
+            >
+              <div className="avatar">{initials(user?.name ?? '')}</div>
+              <div className="grow">
+                <div className="name truncate">{user?.name}</div>
+                <div className="role truncate">{user?.title ?? (user?.role === 'admin' ? 'Administrador' : 'Atendente')}</div>
+              </div>
+            </button>
             <button className="icon-btn" onClick={logout} title="Sair" aria-label="Sair">
               <LogOut size={17} />
             </button>
@@ -141,6 +152,9 @@ export function Layout() {
           </div>
         </header>
         <Outlet />
+        {(account || user?.mustChangePassword) && (
+          <ChangePasswordModal forced={Boolean(user?.mustChangePassword)} onClose={() => setAccount(false)} />
+        )}
       </div>
     </div>
   );

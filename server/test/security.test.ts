@@ -31,3 +31,33 @@ describe('segurança', () => {
     expect(results).toEqual([200, 200, 429]);
   });
 });
+
+describe('senhas', async () => {
+  const { passwordProblem, temporaryPassword, hashPassword, verifyPassword } = await import('../src/auth.js');
+
+  it('exige 8+ caracteres com letras e números', () => {
+    expect(passwordProblem('curta1')).toMatch(/8 caracteres/);
+    expect(passwordProblem('somenteletras')).toMatch(/letras e números/);
+    expect(passwordProblem('12345678')).toMatch(/letras e números/);
+    expect(passwordProblem('Senha2026')).toBeNull();
+  });
+
+  it('gera senhas temporárias fortes, únicas e sem caracteres ambíguos', () => {
+    const all = new Set(Array.from({ length: 200 }, () => temporaryPassword()));
+    expect(all.size).toBe(200);
+    for (const p of all) {
+      expect(p).toHaveLength(12);
+      expect(passwordProblem(p)).toBeNull();
+      expect(p).not.toMatch(/[0O1lI]/);
+    }
+  });
+
+  it('armazena senhas com hash e sal (nunca em texto puro)', () => {
+    const a = hashPassword('Senha2026');
+    const b = hashPassword('Senha2026');
+    expect(a).not.toContain('Senha2026');
+    expect(a).not.toBe(b);
+    expect(verifyPassword('Senha2026', a)).toBe(true);
+    expect(verifyPassword('senha2026', a)).toBe(false);
+  });
+});

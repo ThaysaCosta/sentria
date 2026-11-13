@@ -1,6 +1,7 @@
 import { CheckCircle2, CircleAlert, Cpu, KeyRound, Users } from 'lucide-react';
 import { AiMark, Skeleton } from '../components/ui';
-import { PRIORITY_LABEL, fmtDateTime, fmtNumber, initials } from '../lib/domain';
+import { Link } from 'react-router-dom';
+import { PRIORITY_LABEL, fmtDateTime, fmtNumber } from '../lib/domain';
 import { useApi } from '../lib/hooks';
 import type { AiStatus, Priority, User } from '../lib/types';
 
@@ -82,19 +83,9 @@ export function Settings() {
           </section>
 
           <section className="card card-pad">
-            <h2 className="row" style={{ marginBottom: 12 }}><Users size={18} /> Equipe</h2>
-            <div className="stack-sm">
-              {users?.map((u) => (
-                <div key={u.id} className="row" style={{ gap: 10, padding: '6px 0' }}>
-                  <div className="avatar sm">{initials(u.name)}</div>
-                  <div className="grow">
-                    <div className="small" style={{ fontWeight: 600 }}>{u.name} {u.role === 'admin' && <span className="badge st-new" style={{ marginLeft: 6 }}>Admin</span>}</div>
-                    <div className="tiny muted">{u.title} · {u.email}</div>
-                  </div>
-                  <span className="tiny muted">{u.open_tickets} em aberto</span>
-                </div>
-              ))}
-            </div>
+            <h2 className="row" style={{ marginBottom: 8 }}><Users size={18} /> Equipe</h2>
+            <p className="small muted" style={{ marginBottom: 12 }}>{users ? `${users.length} pessoa(s) ativa(s).` : ''} Convide atendentes, defina papéis e desative acessos.</p>
+            <Link to="/equipe" className="btn btn-secondary btn-sm">Gerenciar equipe</Link>
           </section>
         </div>
       </div>

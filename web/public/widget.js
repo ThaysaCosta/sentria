@@ -157,7 +157,8 @@
   var host = document.createElement('div');
   host.id = 'sentria-widget';
   var root = host.attachShadow({ mode: 'open' });
-  var color = ds.color || '#3978D5';
+  // Só aceita cor hexadecimal (o valor vai para dentro do CSS do widget).
+  var color = /^#[0-9a-fA-F]{3,8}$/.test(ds.color || '') ? ds.color : '#3978D5';
 
   root.innerHTML =
     '<style>' +
@@ -412,7 +413,8 @@
     })
       .then(function (d) {
         errors = [];
-        var track = API + '/portal/acompanhar?protocolo=' + encodeURIComponent(d.protocol) + '&email=' + encodeURIComponent(email);
+        // Link de acompanhamento com token assinado (o e-mail não vai na URL).
+        var track = API + '/portal/acompanhar?protocolo=' + encodeURIComponent(d.protocol) + '&t=' + encodeURIComponent(d.accessToken);
         panel.innerHTML =
           header(resolvedBy ? 'Que bom que resolveu!' : 'Recebemos seu chamado', resolvedBy ? 'Registramos o atendimento.' : 'O time já está com todos os detalhes.') +
           '<div class="body"><div class="ok">' +

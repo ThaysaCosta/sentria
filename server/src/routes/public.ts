@@ -1,10 +1,12 @@
+import { createHmac, timingSafeEqual } from 'node:crypto';
 import { Router } from 'express';
+import { config } from '../config.js';
 import { z } from 'zod';
 import { ai } from '../ai/index.js';
 import { TicketContextSchema } from '../context.js';
 import { all, get, nowIso, run, tx } from '../db/database.js';
 import { CATEGORIES } from '../domain.js';
-import { addEvent, addMessage, createTicket, findTicketByProtocol } from '../services/tickets.js';
+import { addEvent, addMessage, createTicket, findTicketByProtocol, type TicketRow } from '../services/tickets.js';
 import { rateLimit as limiter } from '../utils/security.js';
 
 export const publicRouter = Router();
@@ -62,26 +64,42 @@ publicRouter.post('/tickets', rateLimit(15, 10 * 60_000), async (req, res) => {
   if (body.resolvedBySuggestion && body.articleId) {
     run('UPDATE kb_articles SET helpful = helpful + 1 WHERE id = ?', body.articleId);
   }
-  const t = get<{ protocol: string; status: string }>('SELECT protocol, status FROM tickets WHERE id = ?', id)!;
+  const t = get<{ id: number; protocol: string; status: string; requester_email: string }>('SELECT id, protocol, status, requester_email FROM tickets WHERE id = ?', id)!;
   res.status(201).json({
     protocol: t.protocol,
+    accessToken: accessToken(t),
     status: t.status,
     category: CATEGORIES[analysis.category].label,
     priority: analysis.priority,
   });
 });
 
-const Lookup = z.object({ email: z.string().trim().toLowerCase().email() });
-
-function findForCustomer(protocol: string, email: string) {
-  const t = findTicketByProtocol(protocol);
-  if (!t || t.requester_email.toLowerCase() !== email.toLowerCase()) return null;
-  return t;
+/**
+ * Acesso do cliente a um chamado: com o e-mail usado na abertura OU com o token do link de acompanhamento.
+ * O token é um HMAC (não dá para adivinhar nem derivar outro chamado) e evita colocar o e-mail na URL.
+ */
+function accessToken(t: Pick<TicketRow, 'id' | 'requester_email'>) {
+  return createHmac('sha256', config.jwtSecret).update(`ticket-access:${t.id}:${t.requester_email.toLowerCase()}`).digest('base64url').slice(0, 32);
 }
 
-publicRouter.get('/tickets/:protocol', rateLimit(60, 60_000), (req, res) => {
-  const { email } = Lookup.parse(req.query);
-  const t = findForCustomer(String(req.params.protocol), email);
+const Credential = z
+  .object({ email: z.string().trim().toLowerCase().email().optional(), token: z.string().trim().max(64).optional() })
+  .refine((c) => c.email || c.token, 'Informe o e-mail usado na abertura do chamado.');
+
+function findForCustomer(protocol: string, cred: { email?: string; token?: string }) {
+  const t = findTicketByProtocol(protocol);
+  if (!t) return null;
+  if (cred.token) {
+    const expected = Buffer.from(accessToken(t));
+    const given = Buffer.from(cred.token);
+    return expected.length === given.length && timingSafeEqual(expected, given) ? t : null;
+  }
+  return cred.email && t.requester_email.toLowerCase() === cred.email ? t : null;
+}
+
+publicRouter.post('/tickets/:protocol/access', rateLimit(30, 60_000), (req, res) => {
+  const cred = Credential.parse(req.body);
+  const t = findForCustomer(String(req.params.protocol), cred);
   if (!t) return res.status(404).json({ error: 'Não encontramos um chamado com esse protocolo e e-mail.' });
   const messages = all<{ author_type: string; author_name: string; body: string; created_at: string }>(
     'SELECT author_type, author_name, body, created_at FROM ticket_messages WHERE ticket_id = ? AND internal = 0 ORDER BY created_at, id',
@@ -99,15 +117,20 @@ publicRouter.get('/tickets/:protocol', rateLimit(60, 60_000), (req, res) => {
     csat: t.csat,
     requester_name: t.requester_name,
     resolved_by_ai: Boolean(t.resolved_by_ai),
+    accessToken: accessToken(t),
     messages,
   });
 });
 
-const CustomerMessage = z.object({ email: z.string().trim().email(), body: z.string().trim().min(1).max(10000) });
+const CustomerMessage = z.object({
+  email: z.string().trim().toLowerCase().email().optional(),
+  token: z.string().trim().max(64).optional(),
+  body: z.string().trim().min(1, 'Escreva uma mensagem.').max(10000),
+});
 
 publicRouter.post('/tickets/:protocol/messages', rateLimit(30, 10 * 60_000), (req, res) => {
-  const { email, body } = CustomerMessage.parse(req.body);
-  const t = findForCustomer(String(req.params.protocol), email);
+  const { body, ...cred } = CustomerMessage.parse(req.body);
+  const t = findForCustomer(String(req.params.protocol), cred);
   if (!t) return res.status(404).json({ error: 'Chamado não encontrado.' });
   const now = nowIso();
   tx(() => {
@@ -125,11 +148,15 @@ publicRouter.post('/tickets/:protocol/messages', rateLimit(30, 10 * 60_000), (re
   res.status(201).json({ ok: true });
 });
 
-const Csat = z.object({ email: z.string().trim().email(), score: z.number().int().min(1).max(5) });
+const Csat = z.object({
+  email: z.string().trim().toLowerCase().email().optional(),
+  token: z.string().trim().max(64).optional(),
+  score: z.number().int().min(1).max(5),
+});
 
 publicRouter.post('/tickets/:protocol/csat', rateLimit(20, 10 * 60_000), (req, res) => {
-  const { email, score } = Csat.parse(req.body);
-  const t = findForCustomer(String(req.params.protocol), email);
+  const { score, ...cred } = Csat.parse(req.body);
+  const t = findForCustomer(String(req.params.protocol), cred);
   if (!t) return res.status(404).json({ error: 'Chamado não encontrado.' });
   if (t.status !== 'resolved' && t.status !== 'closed') {
     return res.status(400).json({ error: 'A avaliação fica disponível quando o chamado for resolvido.' });

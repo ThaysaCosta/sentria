@@ -11,7 +11,9 @@ import { seedDatabase } from './db/seed.js';
 import { analyticsRouter, authRouter, insightsRouter, kbRouter, metaRouter } from './routes/core.js';
 import { dataRouter } from './routes/data.js';
 import { publicRouter } from './routes/public.js';
+import { teamRouter } from './routes/team.js';
 import { ticketsRouter } from './routes/tickets.js';
+import { HttpError } from './utils/http.js';
 import { securityHeaders } from './utils/security.js';
 
 // ---------------------------------------------------------------- Banco e IA
@@ -55,7 +57,9 @@ app.use('/api/data', express.json({ limit: '10mb' }));
 app.use(express.json({ limit: '200kb' }));
 
 app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, ai: ai.status().activeEngine, time: new Date().toISOString() });
+  // "demo": existem contas de demonstração ativas (a tela de login mostra o acesso de exemplo).
+  const demo = Boolean(get<{ n: number }>('SELECT COUNT(*) AS n FROM users WHERE protected = 1 AND active = 1')?.n);
+  res.json({ ok: true, ai: ai.status().activeEngine, demo, time: new Date().toISOString() });
 });
 
 app.use('/api/auth', authRouter);
@@ -71,6 +75,7 @@ app.use('/api/analytics', requireAuth, analyticsRouter);
 app.use('/api/insights', requireAuth, insightsRouter);
 app.use('/api/kb', requireAuth, kbRouter);
 app.use('/api/data', requireAuth, dataRouter);
+app.use('/api/team', requireAuth, teamRouter);
 app.use('/api', requireAuth, metaRouter);
 
 app.use('/api', (_req, res) => {
@@ -88,6 +93,7 @@ if (existsSync(config.webDist)) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  if (err instanceof HttpError) return res.status(err.status).json({ error: err.message });
   if (err instanceof ZodError) {
     const first = err.issues[0];
     // Só a mensagem e o campo: detalhes internos de validação não são expostos.

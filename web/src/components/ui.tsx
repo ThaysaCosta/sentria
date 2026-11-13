@@ -158,20 +158,22 @@ export function Empty({ icon, title, children }: { icon?: ReactNode; title: stri
   );
 }
 
-export function Modal({ title, onClose, children, footer, width }: { title: ReactNode; onClose: () => void; children: ReactNode; footer?: ReactNode; width?: number }) {
+export function Modal({ title, onClose, children, footer, width, dismissable = true }: { title: ReactNode; onClose: () => void; children: ReactNode; footer?: ReactNode; width?: number; dismissable?: boolean }) {
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    const onKey = (e: KeyboardEvent) => dismissable && e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [onClose, dismissable]);
   return (
-    <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="modal-backdrop" onMouseDown={(e) => dismissable && e.target === e.currentTarget && onClose()}>
       <div className="modal" role="dialog" aria-modal="true" style={width ? { maxWidth: width } : undefined}>
         <div className="modal-header">
           <h2>{title}</h2>
-          <button className="icon-btn" onClick={onClose} aria-label="Fechar">
-            <X size={18} />
-          </button>
+          {dismissable && (
+            <button className="icon-btn" onClick={onClose} aria-label="Fechar">
+              <X size={18} />
+            </button>
+          )}
         </div>
         <div className="modal-body">{children}</div>
         {footer && <div className="modal-footer">{footer}</div>}

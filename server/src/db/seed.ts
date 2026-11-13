@@ -66,7 +66,7 @@ export function seedDatabase(opts: { quiet?: boolean } = {}) {
     const agents: { id: number; name: string }[] = [];
     for (const u of USERS) {
       const r = run(
-        'INSERT INTO users(name, email, password_hash, role, title, created_at) VALUES(?, ?, ?, ?, ?, ?)',
+        'INSERT INTO users(name, email, password_hash, role, title, created_at, protected) VALUES(?, ?, ?, ?, ?, ?, 1)',
         u.name,
         u.email,
         passwordHash,

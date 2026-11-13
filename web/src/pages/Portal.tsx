@@ -17,7 +17,7 @@ export function Portal() {
   const [expanded, setExpanded] = useState<number | null>(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState<{ protocol: string; resolved: boolean } | null>(null);
+  const [done, setDone] = useState<{ protocol: string; resolved: boolean; token: string } | null>(null);
   const [track, setTrack] = useState({ protocol: '', email: '' });
   const key = useDebounced(`${form.subject}\n${form.description}`, 450);
 
@@ -45,10 +45,10 @@ export function Portal() {
     }
     setSending(true);
     try {
-      const r = await api<{ protocol: string; status: string }>('/public/tickets', {
+      const r = await api<{ protocol: string; status: string; accessToken: string }>('/public/tickets', {
         body: { ...form, resolvedBySuggestion: Boolean(resolvedBy), articleId: resolvedBy },
       });
-      setDone({ protocol: r.protocol, resolved: Boolean(resolvedBy) });
+      setDone({ protocol: r.protocol, resolved: Boolean(resolvedBy), token: r.accessToken });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setError((err as Error).message);
@@ -89,7 +89,7 @@ export function Portal() {
               <div className="mono" style={{ fontSize: 20, fontWeight: 500, color: 'var(--sn-navy)' }}>{done.protocol}</div>
             </div>
             <div className="row wrap" style={{ justifyContent: 'center' }}>
-              <button className="btn btn-primary" onClick={() => navigate(`/portal/acompanhar?protocolo=${done.protocol}&email=${encodeURIComponent(form.email)}`)}>
+              <button className="btn btn-primary" onClick={() => navigate(`/portal/acompanhar?protocolo=${done.protocol}&t=${done.token}`)}>
                 Acompanhar chamado <ArrowRight size={15} />
               </button>
               <button
@@ -163,7 +163,8 @@ export function Portal() {
                 className="card card-pad stack"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  navigate(`/portal/acompanhar?protocolo=${encodeURIComponent(track.protocol.trim())}&email=${encodeURIComponent(track.email.trim())}`);
+                  // O e-mail vai no estado da navegação, nunca na URL.
+                  navigate(`/portal/acompanhar?protocolo=${encodeURIComponent(track.protocol.trim().toUpperCase())}`, { state: { email: track.email.trim() } });
                 }}
               >
                 <h3 className="row"><Search size={16} /> Acompanhar um chamado</h3>
