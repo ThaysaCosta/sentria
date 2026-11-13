@@ -64,7 +64,7 @@
     window.fetch = function (input, init) {
       var mine = internalRequest;
       var method = ((init && init.method) || (input && input.method) || 'GET').toUpperCase();
-      var url = typeof input === 'string' ? input : (input && input.url) || String(input);
+      var url = safeRequestUrl(typeof input === 'string' ? input : (input && input.url) || String(input));
       return nativeFetch(input, init).then(
         function (res) {
           if (!mine && res.status >= 500) {
@@ -114,12 +114,32 @@
   window.addEventListener('hashchange', trackNav);
   trackNav();
 
+  // Privacidade: nunca envia query string (pode ter tokens, e-mails, IDs de sessão).
+  // O hash só é mantido quando é uma rota de SPA (#/...), sem parâmetros.
+  function safeHash() {
+    return /^#\/[\w\-\/]*$/.test(location.hash) ? location.hash : '';
+  }
+  function safePath() {
+    return location.pathname + safeHash();
+  }
+  function safeUrl() {
+    return location.origin + safePath();
+  }
+  function safeRequestUrl(u) {
+    try {
+      var parsed = new URL(u, location.href);
+      return (parsed.origin === location.origin ? '' : parsed.origin) + parsed.pathname;
+    } catch (e) {
+      return String(u).split('?')[0];
+    }
+  }
+
   function context(trigger) {
     return {
       source: 'widget',
       trigger: trigger,
       app: APP,
-      page: { url: location.href.slice(0, 500), path: (location.pathname + location.hash).slice(0, 300), title: document.title.slice(0, 200) },
+      page: { url: safeUrl().slice(0, 500), path: safePath().slice(0, 300), title: document.title.slice(0, 200) },
       user: user,
       browser: {
         userAgent: navigator.userAgent,

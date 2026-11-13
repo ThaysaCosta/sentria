@@ -12,6 +12,7 @@ import { analyticsRouter, authRouter, insightsRouter, kbRouter, metaRouter } fro
 import { dataRouter } from './routes/data.js';
 import { publicRouter } from './routes/public.js';
 import { ticketsRouter } from './routes/tickets.js';
+import { securityHeaders } from './utils/security.js';
 
 // ---------------------------------------------------------------- Banco e IA
 
@@ -48,7 +49,10 @@ app.use(
     cb(null, { origin: open ? true : LOCAL_ORIGINS });
   }),
 );
-app.use(express.json({ limit: '10mb' }));
+app.use(securityHeaders);
+// Só a importação de CSV precisa de corpo grande; o resto (inclusive rotas públicas) fica em 200 KB.
+app.use('/api/data', express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '200kb' }));
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, ai: ai.status().activeEngine, time: new Date().toISOString() });
@@ -57,7 +61,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/public', publicRouter);
 
-// Endpoint do sistema de demonstração (Nuvia Gestão): falha de propósito para mostrar
+// Endpoint do sistema de demonstração (Kairo ERP): falha de propósito para mostrar
 // o widget capturando o erro e oferecendo ajuda.
 app.post('/api/demo/boletos', (_req, res) => {
   res.status(500).json({ error: 'Falha ao gerar boleto: serviço de cobrança indisponível (BILL-500).' });
@@ -86,7 +90,11 @@ if (existsSync(config.webDist)) {
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof ZodError) {
     const first = err.issues[0];
-    return res.status(400).json({ error: first?.message ?? 'Dados inválidos.', issues: err.issues });
+    // Só a mensagem e o campo: detalhes internos de validação não são expostos.
+    return res.status(400).json({ error: first?.message ?? 'Dados inválidos.', field: first?.path?.join('.') || undefined });
+  }
+  if ((err as { type?: string })?.type === 'entity.too.large') {
+    return res.status(413).json({ error: 'Conteúdo grande demais.' });
   }
   if (err instanceof SyntaxError && 'body' in err) {
     return res.status(400).json({ error: 'JSON inválido.' });

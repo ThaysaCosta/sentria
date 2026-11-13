@@ -1,28 +1,15 @@
-import { Router, type NextFunction, type Request, type Response } from 'express';
+import { Router } from 'express';
 import { z } from 'zod';
 import { ai } from '../ai/index.js';
 import { TicketContextSchema } from '../context.js';
 import { all, get, nowIso, run, tx } from '../db/database.js';
 import { CATEGORIES } from '../domain.js';
 import { addEvent, addMessage, createTicket, findTicketByProtocol } from '../services/tickets.js';
+import { rateLimit as limiter } from '../utils/security.js';
 
 export const publicRouter = Router();
 
-/** Limitador simples em memória para as rotas públicas de escrita. */
-function rateLimit(max: number, windowMs: number) {
-  const hits = new Map<string, number[]>();
-  return (req: Request, res: Response, next: NextFunction) => {
-    const key = req.ip ?? 'unknown';
-    const now = Date.now();
-    const recent = (hits.get(key) ?? []).filter((t) => now - t < windowMs);
-    if (recent.length >= max) {
-      return res.status(429).json({ error: 'Muitas solicitações em pouco tempo. Tente novamente em alguns minutos.' });
-    }
-    recent.push(now);
-    hits.set(key, recent);
-    next();
-  };
-}
+const rateLimit = (max: number, windowMs: number) => limiter({ max, windowMs });
 
 const Suggest = z.object({ subject: z.string().max(200).default(''), description: z.string().max(10000).default('') });
 

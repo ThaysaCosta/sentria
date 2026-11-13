@@ -211,7 +211,19 @@ SENTRIA/
 
 **Stack:** Node.js · Express 5 · TypeScript (strict) · SQLite nativo do Node (`node:sqlite`) · Zod · JWT · React 19 · React Router 7 · Recharts · Lucide · Vite · Vitest · SDK oficial da Anthropic · Docker · GitHub Actions.
 
-**Segurança:** senhas com `scrypt` e comparação em tempo constante, JWT com expiração, validação de toda entrada com Zod (o contexto do widget é truncado e limitado), consultas SQL parametrizadas, *rate limit* nas rotas públicas, CORS aberto apenas para as rotas públicas do widget e, no portal, acesso a um chamado apenas com protocolo **e** o e-mail de quem abriu.
+### Segurança
+
+| Camada | Proteção |
+|---|---|
+| Autenticação | Senhas com `scrypt` e comparação em tempo constante; JWT com expiração de 12h; em produção, segredo nunca padrão (gerado se `JWT_SECRET` faltar); login limitado a 10 tentativas a cada 15 min por IP. |
+| Entrada de dados | Toda entrada validada com Zod; consultas SQL 100% parametrizadas (ordenação e filtros por lista de valores permitidos); corpo limitado a 200 KB (10 MB só na importação de CSV); erros sem detalhes internos. |
+| Navegador | Cabeçalhos de segurança e Content-Security-Policy restritiva (sem scripts inline), `X-Frame-Options: DENY`, `nosniff`, HSTS em HTTPS. React escapa todo conteúdo; o widget escapa HTML manualmente. |
+| Rotas públicas | *Rate limit* por IP; CORS aberto apenas para as rotas do widget/portal (sem cookies); acesso a um chamado só com protocolo **e** o e-mail de quem abriu. |
+| Privacidade (LGPD) | O widget mostra ao usuário o que será anexado, não envia query string nem conteúdo de formulários, e trunca mensagens de erro. |
+| Exportação | Proteção contra *CSV injection* (células iniciadas por `= + - @` são neutralizadas). |
+| Dependências | `npm audit` sem vulnerabilidades conhecidas. |
+
+**Limites conhecidos (fora do escopo da demo):** o token fica no `localStorage` (em produção, um cookie `HttpOnly` reduz o impacto de XSS); o *rate limit* é em memória (com várias instâncias, usar Redis); a demo pública usa credenciais conhecidas de propósito, e os dados são recriados a cada reinício.
 
 ## API
 
@@ -242,7 +254,7 @@ Todas as rotas abaixo de `/api`, exceto `auth/login` e `public/*`, exigem `Autho
 ## Testes e qualidade
 
 ```bash
-npm test          # 29 testes: classificador, sentimento, prioridade, churn, insights e CSV
+npm test          # 31 testes: classificador, sentimento, prioridade, churn, insights, CSV e segurança
 npm run typecheck # TypeScript strict no backend e no frontend
 ```
 

@@ -6,6 +6,7 @@ import { requireAuth, signToken, verifyPassword, type AuthUser } from '../auth.j
 import { all, get } from '../db/database.js';
 import { CATEGORIES } from '../domain.js';
 import { detail, overview } from '../services/analytics.js';
+import { rateLimit } from '../utils/security.js';
 import { buildAnalysisInput, loadInsightTickets } from '../services/tickets.js';
 
 // ------------------------------------------------------------------ Auth
@@ -14,7 +15,10 @@ export const authRouter = Router();
 
 const Login = z.object({ email: z.string().trim().toLowerCase().email(), password: z.string().min(1) });
 
-authRouter.post('/login', (req, res) => {
+// Proteção contra tentativa de senhas em massa: 10 tentativas a cada 15 minutos por IP.
+const loginLimiter = rateLimit({ max: 10, windowMs: 15 * 60_000, message: 'Muitas tentativas de login. Aguarde alguns minutos e tente novamente.' });
+
+authRouter.post('/login', loginLimiter, (req, res) => {
   const { email, password } = Login.parse(req.body);
   const user = get<AuthUser & { password_hash: string; title: string }>(
     'SELECT id, name, email, role, title, password_hash FROM users WHERE email = ?',

@@ -62,7 +62,9 @@ export function parseCsvObjects(input: string): { headers: string[]; rows: Recor
 export function toCsv(rows: Record<string, unknown>[], columns: { key: string; label: string }[]): string {
   const escape = (v: unknown) => {
     if (v == null) return '';
-    const s = Array.isArray(v) ? v.join(', ') : String(v);
+    let s = Array.isArray(v) ? v.join(', ') : String(v);
+    // Evita "CSV injection": células iniciadas por = + - @ viram fórmulas ao abrir no Excel.
+    if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
     return /[";\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   const header = columns.map((c) => escape(c.label)).join(';');
