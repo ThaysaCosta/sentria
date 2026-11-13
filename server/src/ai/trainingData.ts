@@ -28,6 +28,8 @@ export const TRAINING_DATA: Record<CategoryKey, string[]> = {
     'Preciso do comprovante de pagamento para o setor contábil',
     'Estorno da cobrança duplicada ainda não caiu',
     'Mudança de plano Pro para Business, como fica a cobrança',
+    'Erro ao gerar boleto, o serviço de cobrança está indisponível',
+    'Falha na emissão do boleto na tela de faturas do financeiro',
   ],
   acesso: [
     'Não consigo entrar na minha conta, diz senha incorreta',

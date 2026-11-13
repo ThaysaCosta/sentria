@@ -15,6 +15,10 @@ export interface InsightTicket {
   churn_risk: number;
   created_at: string;
   sla_due_at: string | null;
+  /** Tela do sistema do cliente em que o chamado foi aberto (widget). */
+  page?: string | null;
+  /** Erro principal capturado, ex.: "POST /api/boletos → 500". */
+  error_signature?: string | null;
 }
 
 export interface Insight {
@@ -80,6 +84,8 @@ export function detectSpikes(tickets: InsightTicket[], now: number): Insight[] {
     const plan = mode(recent.map((t) => t.customer_plan));
     const version = mode(recent.map((t) => t.product_version));
     const tag = mode(recent.flatMap((t) => t.tags.filter((g) => !/^v\d/.test(g))));
+    const page = mode(recent.map((t) => t.page));
+    const signature = mode(recent.map((t) => t.error_signature));
     const earliest = Math.min(...recent.map((t) => Date.parse(t.created_at)));
     const hours = Math.max(1, Math.ceil((now - earliest) / HOUR));
     const topic = tag.value ? `falha relacionada a ${tag.value}` : CATEGORIES[cat].label.toLowerCase();
@@ -87,6 +93,7 @@ export function detectSpikes(tickets: InsightTicket[], now: number): Insight[] {
     const details: string[] = [];
     if (version.value && version.share >= 0.6) details.push(`${pct(version.share)} na versão ${version.value}`);
     if (plan.value && plan.share >= 0.6) details.push(`concentrados no plano ${plan.value}`);
+    if (page.value && page.share >= 0.4) details.push(`${pct(page.share)} abertos na tela ${page.value}`);
 
     const confidence = clamp(0.55 + 0.12 * Math.log2(ratio) + 0.15 * Math.max(plan.share, version.share), 0.5, 0.98);
     out.push({
@@ -105,7 +112,10 @@ export function detectSpikes(tickets: InsightTicket[], now: number): Insight[] {
         { label: 'Variação', value: `${fmtX(ratio)}×` },
       ],
       ticketIds: recent.map((t) => t.id),
-      suggestedAction: SPIKE_ACTIONS[cat],
+      suggestedAction:
+        signature.value && signature.share >= 0.4
+          ? `${SPIKE_ACTIONS[cat]} Erro em comum capturado pelo widget: ${signature.value}.`
+          : SPIKE_ACTIONS[cat],
       category: cat,
       topic: tag.value ?? undefined,
     } as Insight & { topic?: string });
@@ -139,11 +149,12 @@ function mergeSpikesByTopic(spikes: (Insight & { topic?: string })[]): Insight[]
  * Clientes que abriram muito mais chamados que o seu próprio normal nos últimos 7 dias,
  * um sinal clássico de risco de churn. A base é a média semanal das 3 semanas anteriores.
  */
-export function detectRecurringCustomers(tickets: InsightTicket[], now: number): Insight[] {
+export function detectRecurringCustomers(tickets: InsightTicket[], now: number, exclude: Set<number> = new Set()): Insight[] {
   const byCustomer = new Map<number, InsightTicket[]>();
   const history = new Map<number, number>();
   for (const t of tickets) {
-    if (t.customer_id == null) continue;
+    // Tickets que já fazem parte de um incidente (pico) são explicados por ele, não pelo cliente.
+    if (t.customer_id == null || exclude.has(t.id)) continue;
     const age = now - Date.parse(t.created_at);
     if (age <= 7 * DAY) {
       const list = byCustomer.get(t.customer_id) ?? [];
@@ -168,7 +179,7 @@ export function detectRecurringCustomers(tickets: InsightTicket[], now: number):
       severity: negative >= 0.5 || avgRisk >= 55 ? 'critical' : 'warning',
       title: 'Este cliente pode precisar de atenção',
       headline: `${name} abriu ${list.length} chamados em 7 dias`,
-      description: `${pct(negative)} das mensagens com sentimento negativo e ${open} chamado(s) ainda em aberto${
+      description: `${pct(negative)} das mensagens com sentimento negativo${open === 0 ? ", todos já respondidos" : open === 1 ? " e 1 chamado ainda em aberto" : ` e ${open} chamados ainda em aberto`}${
         plan ? `. Cliente do plano ${plan}` : ''
       }. Risco médio de churn de ${Math.round(avgRisk)}%.`,
       confidence: Math.round(clamp(0.6 + list.length * 0.03 + negative * 0.2, 0.5, 0.97) * 100) / 100,
@@ -183,7 +194,9 @@ export function detectRecurringCustomers(tickets: InsightTicket[], now: number):
       customerId,
     });
   }
-  return out.sort((a, b) => b.ticketIds.length - a.ticketIds.length).slice(0, 3);
+  return out
+    .sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity] || b.ticketIds.length - a.ticketIds.length)
+    .slice(0, 3);
 }
 
 /** Agrupa chamados abertos muito parecidos (provável causa comum). */
@@ -305,7 +318,7 @@ export function detectInsights(
   const inSpikes = new Set(spikes.flatMap((s) => s.ticketIds));
   const insights = [
     ...spikes,
-    ...detectRecurringCustomers(tickets, now),
+    ...detectRecurringCustomers(tickets, now, inSpikes),
     ...detectSlaRisk(tickets, now),
     ...detectClusters(tickets, similarity, inSpikes),
     ...detectSentimentShift(tickets, now),

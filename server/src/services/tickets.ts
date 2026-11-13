@@ -1,6 +1,7 @@
 import { ai, type Analysis } from '../ai/index.js';
 import type { InsightTicket } from '../ai/insights.js';
 import { all, get, nowIso, run, SQL_ISO_NOW, tx } from '../db/database.js';
+import { describeContext, errorSignature, type TicketContext } from '../context.js';
 import { SLA_HOURS, type CategoryKey, type Channel, type Priority, type Status } from '../domain.js';
 
 export interface TicketRow {
@@ -38,6 +39,7 @@ export interface TicketRow {
   first_response_at: string | null;
   resolved_at: string | null;
   sla_due_at: string | null;
+  context: string | null;
   customer_name?: string | null;
   customer_plan?: string | null;
   assignee_name?: string | null;
@@ -57,6 +59,7 @@ export function serializeTicket(t: TicketRow) {
     ...t,
     ai_tags: parseJson<string[]>(t.ai_tags, []),
     ai_signals: parseJson<string[]>(t.ai_signals, []),
+    context: parseJson<TicketContext | null>(t.context, null),
     resolved_by_ai: Boolean(t.resolved_by_ai),
     sla_breached: isSlaBreached(t),
   };
@@ -178,6 +181,8 @@ export interface NewTicketInput {
   status?: Status;
   resolvedByAi?: boolean;
   allowClaude?: boolean;
+  /** Contexto técnico capturado pelo widget. */
+  context?: TicketContext | null;
 }
 
 export function buildAnalysisInput(t: {
@@ -187,6 +192,7 @@ export function buildAnalysisInput(t: {
   customerId?: number | null;
   productVersion?: string | null;
   excludeId?: number;
+  context?: TicketContext | null;
 }) {
   const customer = customerInfo(t.customerId);
   return {
@@ -196,7 +202,8 @@ export function buildAnalysisInput(t: {
     customerName: customer?.name ?? null,
     customerPlan: customer?.plan ?? null,
     customerRecentTickets: recentTicketsForCustomer(t.customerId, t.excludeId),
-    productVersion: t.productVersion ?? null,
+    productVersion: t.productVersion ?? t.context?.app?.version ?? null,
+    technicalContext: describeContext(t.context),
   };
 }
 
@@ -209,6 +216,7 @@ export async function createTicket(input: NewTicketInput) {
       requesterName: input.requesterName,
       customerId,
       productVersion: input.productVersion,
+      context: input.context,
     }),
     { allowClaude: input.allowClaude ?? true },
   );
@@ -262,7 +270,7 @@ export function insertTicket(input: NewTicketInput, customerId: number | null, a
     );
     const id = Number(r.lastInsertRowid);
     const protocol = `SNT${createdAt.slice(0, 4)}${String(id).padStart(6, '0')}`;
-    run('UPDATE tickets SET protocol = ? WHERE id = ?', protocol, id);
+    run('UPDATE tickets SET protocol = ?, context = ? WHERE id = ?', protocol, input.context ? JSON.stringify(input.context) : null, id);
     addEvent(id, 'created', input.actor ?? input.requesterName, { origin: input.origin, channel: input.channel }, createdAt);
     addEvent(
       id,
@@ -344,5 +352,7 @@ export function loadInsightTickets(days = 30): InsightTicket[] {
     churn_risk: t.churn_risk,
     created_at: t.created_at,
     sla_due_at: t.sla_due_at,
+    page: parseJson<TicketContext | null>(t.context, null)?.page?.path ?? null,
+    error_signature: errorSignature(parseJson<TicketContext | null>(t.context, null)),
   }));
 }

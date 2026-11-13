@@ -2,7 +2,7 @@ export type CategoryKey = 'pagamentos' | 'acesso' | 'integracoes' | 'performance
 export type Priority = 'low' | 'medium' | 'high' | 'critical';
 export type Status = 'new' | 'in_progress' | 'waiting' | 'resolved' | 'closed';
 export type Sentiment = 'negative' | 'neutral' | 'positive';
-export type Channel = 'email' | 'portal' | 'chat' | 'phone' | 'whatsapp';
+export type Channel = 'widget' | 'email' | 'portal' | 'chat' | 'phone' | 'whatsapp';
 
 export interface User {
   id: number;
@@ -61,6 +61,18 @@ export interface Ticket {
   resolved_at: string | null;
   sla_due_at: string | null;
   sla_breached: boolean;
+  context: TicketContext | null;
+}
+
+export interface TicketContext {
+  source: 'widget' | 'portal';
+  trigger: 'manual' | 'error';
+  app?: { name?: string; version?: string };
+  page?: { url?: string; path?: string; title?: string };
+  user?: { id?: string; name?: string; email?: string; company?: string; plan?: string };
+  browser?: { userAgent?: string; language?: string; screen?: string; timezone?: string };
+  errors?: { type: 'js' | 'http' | 'promise'; message: string; at?: string; url?: string; method?: string; status?: number }[];
+  breadcrumbs?: { type: 'nav' | 'click' | 'http' | 'error'; label: string; at?: string }[];
 }
 
 export interface KbRef {

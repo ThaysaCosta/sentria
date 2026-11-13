@@ -11,6 +11,8 @@ export interface AnalysisInput {
   /** Chamados do mesmo cliente nos últimos 7 dias (sem contar este). */
   customerRecentTickets?: number;
   productVersion?: string | null;
+  /** Resumo do contexto técnico capturado pelo widget (tela, erros). */
+  technicalContext?: string | null;
 }
 
 export interface KbRef {
@@ -113,10 +115,14 @@ const CATEGORY_WEIGHT: Record<CategoryKey, number> = {
   performance: 0.8, integracoes: 0.6, acesso: 0.6, pagamentos: 0.5, bugs: 0.5, duvidas: -0.8,
 };
 
-function scorePriority(text: string, category: CategoryKey, sentimentScore: number, plan?: string | null) {
+function scorePriority(text: string, category: CategoryKey, sentimentScore: number, plan?: string | null, technicalError = false) {
   const norm = normalize(text);
   const signals: string[] = [];
   let points = CATEGORY_WEIGHT[category];
+  if (technicalError) {
+    points += 1.2;
+    signals.push('Erro técnico capturado automaticamente');
+  }
   for (const p of URGENCY_PATTERNS) {
     if (p.re.test(norm)) {
       points += p.weight;
@@ -249,12 +255,15 @@ export function analyzeLocal(
   classifier: NaiveBayesClassifier<CategoryKey>,
   kbArticles: KbRef[],
 ): Analysis {
-  const text = `${input.subject}. ${input.subject}. ${input.description}`; // assunto com peso dobrado
+  // Assunto com peso dobrado; a tela de origem (capturada pelo widget) também é evidência de categoria.
+  const screen = input.technicalContext?.match(/^Tela: (.*)$/m)?.[1] ?? '';
+  const text = `${input.subject}. ${input.subject}. ${input.description} ${screen}`;
   const prediction = classifier.predict(text);
   const category = prediction.label;
   const full = `${input.subject}. ${input.description}`;
   const { sentiment, score } = analyzeSentiment(full);
-  const prio = scorePriority(full, category, score, input.customerPlan);
+  const technicalError = /^Erro /m.test(input.technicalContext ?? '');
+  const prio = scorePriority(full, category, score, input.customerPlan, technicalError);
   const churn = scoreChurn(full, score, prio.priority, input.customerRecentTickets ?? 0, input.customerPlan);
   const article = kbArticles.find((a) => a.category === category) ?? kbArticles[0] ?? null;
 

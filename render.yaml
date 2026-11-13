@@ -1,0 +1,22 @@
+# Blueprint do Render: New + > Blueprint > selecione este repositório.
+# No plano gratuito o disco é temporário: os dados de demonstração são recriados
+# automaticamente quando o serviço reinicia, o que é ideal para uma demo pública.
+services:
+  - type: web
+    name: sentria
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm run start -w server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: TRUST_PROXY
+        value: "1"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLAUDE_MODEL
+        value: claude-opus-5-5
+      - key: ANTHROPIC_API_KEY
+        sync: false

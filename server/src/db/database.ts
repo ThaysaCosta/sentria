@@ -68,7 +68,8 @@ CREATE TABLE IF NOT EXISTS tickets (
   updated_at        TEXT NOT NULL,
   first_response_at TEXT,
   resolved_at       TEXT,
-  sla_due_at        TEXT
+  sla_due_at        TEXT,
+  context           TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_tickets_created  ON tickets(created_at);
 CREATE INDEX IF NOT EXISTS idx_tickets_status   ON tickets(status);
@@ -111,6 +112,9 @@ CREATE TABLE IF NOT EXISTS kb_articles (
 
 export function migrate(): void {
   db.exec(SCHEMA);
+  // Migrações incrementais para bancos criados por versões anteriores.
+  const columns = (db.prepare('PRAGMA table_info(tickets)').all() as { name: string }[]).map((c) => c.name);
+  if (!columns.includes('context')) db.exec('ALTER TABLE tickets ADD COLUMN context TEXT');
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

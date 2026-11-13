@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import { ai } from '../ai/index.js';
 import { hashPassword } from '../auth.js';
+import type { TicketContext } from '../context.js';
 import type { CategoryKey, Channel, Priority, Status } from '../domain.js';
 import { addEvent, addMessage, buildAnalysisInput, insertTicket } from '../services/tickets.js';
 import { db, migrate, nowIso, run, setMeta, tx } from './database.js';
@@ -122,7 +123,7 @@ export function seedDatabase(opts: { quiet?: boolean } = {}) {
     const categoryWeights: Record<CategoryKey, number> = {
       pagamentos: 30, acesso: 22, integracoes: 17, performance: 13, bugs: 10, duvidas: 8,
     };
-    const channelWeights: Record<Channel, number> = { email: 35, portal: 30, chat: 15, whatsapp: 12, phone: 8 };
+    const channelWeights: Record<Channel, number> = { widget: 28, email: 28, portal: 12, chat: 14, whatsapp: 11, phone: 7 };
     // Distribuição por hora (horário de Brasília): pico entre 9h e 18h.
     const hourWeights = [0.2, 0.1, 0.1, 0.1, 0.1, 0.2, 0.5, 1.2, 3, 5, 6, 5.5, 3.5, 4.5, 5.5, 5.5, 5, 4, 2.5, 1.5, 1, 0.8, 0.5, 0.3];
     const hourTotal = hourWeights.reduce((a, b) => a + b, 0);
@@ -167,7 +168,7 @@ export function seedDatabase(opts: { quiet?: boolean } = {}) {
         customer: rand() < 0.9 ? pick(proCustomers) : pick(customers),
         tone: rand() < 0.35 ? 'angry' : rand() < 0.4 ? 'urgent' : 'polite',
         version: '4.2',
-        channel: weighted(channelWeights),
+        channel: rand() < 0.8 ? 'widget' : weighted(channelWeights),
         kind: 'spike',
       });
     }
@@ -197,6 +198,50 @@ export function seedDatabase(opts: { quiet?: boolean } = {}) {
         .replace(/\{versao\}/g, c.version)
         .replace(/\{n\}/g, String(2 + Math.floor(rand() * 8)));
 
+    // Contexto técnico que o widget capturaria dentro do Kairo ERP (sistema fictício que usa a SENTRIA).
+    const PAGES: Record<CategoryKey, { path: string; title: string }[]> = {
+      pagamentos: [{ path: '/financeiro/faturas', title: 'Faturas' }, { path: '/financeiro/assinatura', title: 'Assinatura e plano' }],
+      acesso: [{ path: '/configuracoes/usuarios', title: 'Usuários e permissões' }, { path: '/perfil/seguranca', title: 'Segurança da conta' }],
+      integracoes: [{ path: '/integracoes/webhooks', title: 'Webhooks' }, { path: '/integracoes/api', title: 'Chaves de API' }],
+      performance: [{ path: '/relatorios/vendas', title: 'Relatório de vendas' }, { path: '/dashboard', title: 'Dashboard' }],
+      bugs: [{ path: '/cadastros/clientes', title: 'Cadastro de clientes' }, { path: '/vendas/pedidos', title: 'Pedidos' }],
+      duvidas: [{ path: '/relatorios', title: 'Relatórios' }, { path: '/configuracoes/notificacoes', title: 'Notificações' }],
+    };
+    const BROWSERS = [
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36',
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36 Edg/141.0',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Safari/605.1.15',
+    ];
+    const buildContext = (d: Draft, name: string, mail: string): TicketContext => {
+      const page = d.kind === 'spike' ? PAGES.pagamentos[0] : pick(PAGES[d.category]);
+      const at = new Date(d.at - 40_000).toISOString();
+      const errors: NonNullable<TicketContext['errors']> = [];
+      if (d.kind === 'spike') {
+        errors.push({ type: 'http', method: 'POST', url: '/api/boletos', status: 500, message: 'Falha ao gerar boleto: serviço de cobrança indisponível (BILL-500).', at });
+      } else if (d.category === 'integracoes' && rand() < 0.5) {
+        errors.push({ type: 'http', method: 'POST', url: '/api/webhooks/test', status: 500, message: 'Internal Server Error', at });
+      } else if (d.category === 'performance' && rand() < 0.5) {
+        errors.push({ type: 'http', method: 'GET', url: '/api/relatorios/vendas', status: 504, message: 'Gateway Timeout', at });
+      } else if (d.category === 'bugs' && rand() < 0.5) {
+        errors.push({ type: 'js', message: "TypeError: Cannot read properties of undefined (reading 'id')", at });
+      }
+      return {
+        source: 'widget',
+        trigger: errors.length && rand() < 0.65 ? 'error' : 'manual',
+        app: { name: 'Kairo ERP', version: d.version },
+        page: { path: page.path, title: page.title, url: `https://app.kairo.com.br${page.path}` },
+        user: { name, email: mail, company: d.customer.name, plan: d.customer.plan },
+        browser: { userAgent: pick(BROWSERS), language: 'pt-BR', screen: pick(['1920x1080', '1366x768', '1536x864', '2560x1440']), timezone: 'America/Sao_Paulo' },
+        errors,
+        breadcrumbs: [
+          { type: 'nav', label: 'Dashboard' },
+          { type: 'nav', label: page.title },
+          ...(d.kind === 'spike' ? [{ type: 'click' as const, label: 'Gerar boleto' }] : []),
+          ...errors.map((e) => ({ type: 'error' as const, label: e.type === 'http' ? `${e.method} ${e.url} → ${e.status}` : e.message })),
+        ],
+      };
+    };
+
     const resolutionBase: Record<Priority, number> = { critical: 3, high: 7, medium: 16, low: 30 };
     let humanReviewed = 0;
 
@@ -219,6 +264,7 @@ export function seedDatabase(opts: { quiet?: boolean } = {}) {
       const ageHours = (now - draft.at) / HOUR;
       const daysAgo = ageHours / 24;
 
+      const context = draft.channel === 'widget' ? buildContext(draft, requesterName, email) : null;
       const analysis = ai.analyzeLocal(
         buildAnalysisInput({
           subject,
@@ -226,13 +272,14 @@ export function seedDatabase(opts: { quiet?: boolean } = {}) {
           requesterName,
           customerId: draft.customer.id,
           productVersion: draft.version,
+          context,
         }),
       );
 
       // Uma parte dos chamados simples do portal é resolvida pela própria IA (artigo sugerido).
       const deflected =
         draft.kind === 'normal' &&
-        draft.channel === 'portal' &&
+        (draft.channel === 'portal' || draft.channel === 'widget') &&
         (draft.category === 'duvidas' || draft.category === 'acesso') &&
         rand() < 0.35;
 
@@ -249,6 +296,7 @@ export function seedDatabase(opts: { quiet?: boolean } = {}) {
           createdAt,
           status: deflected ? 'resolved' : 'new',
           resolvedByAi: deflected,
+          context,
         },
         draft.customer.id,
         analysis,
@@ -309,7 +357,18 @@ export function seedDatabase(opts: { quiet?: boolean } = {}) {
       // Histórico detalhado só para os últimos 30 dias (mantém o banco leve).
       if (daysAgo <= 30 && assignee && firstResponseAt) {
         addEvent(id, 'assigned', 'Sistema', { assignee: assignee.name }, firstResponseAt);
-        addMessage(id, 'agent', assignee.name, analysis.suggestedReply, false, firstResponseAt);
+        // Taxa de aceitação simulada: a maioria usa a sugestão da IA; parte envia sem editar.
+        const used = rand() < 0.74;
+        const verbatim = used && rand() < 0.48;
+        addMessage(
+          id,
+          'agent',
+          assignee.name,
+          used ? analysis.suggestedReply + (verbatim ? '' : '\n\nQualquer dúvida, estou à disposição.') : `Olá, ${first}! Estamos verificando o seu caso e retornamos em breve.\n\nEquipe de Suporte`,
+          false,
+          firstResponseAt,
+        );
+        addEvent(id, 'reply', assignee.name, { usedSuggestion: used, verbatim }, firstResponseAt);
         if (resolvedAt) {
           addMessage(
             id,

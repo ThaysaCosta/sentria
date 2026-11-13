@@ -42,6 +42,7 @@ export const PRIORITY_KEYS: Priority[] = ['critical', 'high', 'medium', 'low'];
 export const SENTIMENT_LABEL: Record<Sentiment, string> = { negative: 'Negativo', neutral: 'Neutro', positive: 'Positivo' };
 
 export const CHANNEL_LABEL: Record<Channel, string> = {
+  widget: 'Widget',
   email: 'E-mail',
   portal: 'Portal',
   chat: 'Chat',

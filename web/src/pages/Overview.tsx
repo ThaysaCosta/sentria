@@ -119,7 +119,7 @@ export function Overview() {
               <Skeleton h={260} />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={data?.weekly ?? []} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+                <ComposedChart data={data?.weekly ?? []} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="gReceived" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0" stopColor="#3978D5" stopOpacity={0.28} />
@@ -128,7 +128,7 @@ export function Overview() {
                   </defs>
                   <CartesianGrid vertical={false} stroke="#E4E9F1" />
                   <XAxis dataKey="week" {...axisProps} tickFormatter={fmtShortDate} interval="preserveStartEnd" minTickGap={24} />
-                  <YAxis {...axisProps} width={44} />
+                  <YAxis {...axisProps} width={36} />
                   <Tooltip content={(p) => <ChartTooltip {...p} formatLabel={(l) => `Semana de ${fmtShortDate(l)}`} />} />
                   <Bar dataKey="resolvedByAi" name="Resolvidos pela IA" fill="#8C8BEA" radius={[4, 4, 0, 0]} barSize={14} />
                   <Area type="monotone" dataKey="received" name="Recebidos" stroke="#3978D5" strokeWidth={2.2} fill="url(#gReceived)" />

@@ -77,6 +77,12 @@ describe('cliente recorrente', () => {
     expect(insight.severity).toBe('critical');
   });
 
+  it('não conta tickets que já fazem parte de um incidente detectado', () => {
+    const burst = Array.from({ length: 8 }, (_, i) => ticket({ hoursAgo: i * 12, customer_id: 8 }));
+    expect(detectRecurringCustomers(burst, NOW)).toHaveLength(1);
+    expect(detectRecurringCustomers(burst, NOW, new Set(burst.map((t) => t.id)))).toHaveLength(0);
+  });
+
   it('ignora cliente que sempre teve volume alto', () => {
     const history = Array.from({ length: 30 }, (_, i) => ticket({ hoursAgo: (7.5 + i * 0.6) * 24, customer_id: 9 }));
     const week = Array.from({ length: 9 }, (_, i) => ticket({ hoursAgo: i * 12, customer_id: 9 }));

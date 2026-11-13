@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Testes, tipos e build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Sobe a API e verifica a saúde
+        run: |
+          DB_PATH=/tmp/sentria-ci.db npm run start -w server &
+          for i in $(seq 1 30); do curl -fs http://localhost:3333/api/health && exit 0; sleep 1; done
+          exit 1

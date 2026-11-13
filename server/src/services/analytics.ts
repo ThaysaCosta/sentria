@@ -239,6 +239,16 @@ export function detail(days: number) {
     .sort((a, b) => b.churnRisk - a.churnRisk || b.tickets - a.tickets)
     .slice(0, 8);
 
+  // Taxa de aceitação das respostas sugeridas pela IA (respostas individuais, sem as em massa).
+  const replies = all<{ data: string | null }>(
+    `SELECT data FROM ticket_events WHERE type = 'reply' AND created_at >= ${SQL_ISO_NOW}`,
+    `-${days} days`,
+  )
+    .map((r) => (r.data ? (JSON.parse(r.data) as { usedSuggestion?: boolean; verbatim?: boolean; bulk?: boolean }) : {}))
+    .filter((d) => !d.bulk);
+  const used = replies.filter((d) => d.usedSuggestion).length;
+  const verbatim = replies.filter((d) => d.verbatim).length;
+
   return {
     days,
     total: rows.length,
@@ -256,6 +266,12 @@ export function detail(days: number) {
       matrix,
       perCategory,
       confidence,
+      replies: {
+        total: replies.length,
+        usedSuggestion: replies.length ? round(used / replies.length, 3) : null,
+        verbatim: replies.length ? round(verbatim / replies.length, 3) : null,
+        editedBeforeSending: used ? round((used - verbatim) / used, 3) : null,
+      },
     },
     customers,
   };

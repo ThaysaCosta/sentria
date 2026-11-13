@@ -38,8 +38,16 @@ ai.retrain();
 
 const app = express();
 app.disable('x-powered-by');
-app.set('trust proxy', 'loopback');
-app.use(cors({ origin: [/^http:\/\/localhost:\d+$/, /^http:\/\/127\.0\.0\.1:\d+$/] }));
+// Atrás de um proxy (Render, Docker + Nginx), use TRUST_PROXY=1 para o rate limit ver o IP real.
+app.set('trust proxy', process.env.TRUST_PROXY ? 1 : 'loopback');
+const LOCAL_ORIGINS = [/^http:\/\/localhost:\d+$/, /^http:\/\/127\.0\.0\.1:\d+$/];
+// Rotas públicas aceitam qualquer origem: o widget roda dentro do sistema de outras empresas.
+app.use(
+  cors((req, cb) => {
+    const open = req.url?.startsWith('/api/public') || req.url?.startsWith('/api/demo');
+    cb(null, { origin: open ? true : LOCAL_ORIGINS });
+  }),
+);
 app.use(express.json({ limit: '10mb' }));
 
 app.get('/api/health', (_req, res) => {
@@ -48,6 +56,12 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/public', publicRouter);
+
+// Endpoint do sistema de demonstração (Nuvia Gestão): falha de propósito para mostrar
+// o widget capturando o erro e oferecendo ajuda.
+app.post('/api/demo/boletos', (_req, res) => {
+  res.status(500).json({ error: 'Falha ao gerar boleto: serviço de cobrança indisponível (BILL-500).' });
+});
 app.use('/api/tickets', requireAuth, ticketsRouter);
 app.use('/api/analytics', requireAuth, analyticsRouter);
 app.use('/api/insights', requireAuth, insightsRouter);
@@ -62,6 +76,7 @@ app.use('/api', (_req, res) => {
 // Em produção (`npm start`), o próprio servidor entrega o frontend compilado.
 if (existsSync(config.webDist)) {
   app.use(express.static(config.webDist, { index: false, maxAge: '1h' }));
+  app.get('/demo', (_req, res) => res.sendFile(path.join(config.webDist, 'demo.html')));
   app.get(/^\/(?!api\/).*/, (_req, res) => {
     res.sendFile(path.join(config.webDist, 'index.html'));
   });

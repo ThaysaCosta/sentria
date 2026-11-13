@@ -114,7 +114,7 @@ export function Insights() {
         </div>
       ) : (
         <div className="grid grid-2">
-          {visible.map((i) => <InsightCard key={i.id} insight={i} />)}
+          {visible.map((i) => <InsightCard key={i.id} insight={i} onChanged={reload} />)}
         </div>
       )}
 

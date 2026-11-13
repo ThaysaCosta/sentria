@@ -6,6 +6,7 @@ import {
   Inbox,
   LayoutDashboard,
   LogOut,
+  MessageCircle,
   Plus,
   Search,
   Settings,
@@ -78,6 +79,10 @@ export function Layout() {
               {l.label}
             </NavLink>
           ))}
+          <a className="nav-link" href="/demo.html" target="_blank" rel="noreferrer" title="Sistema fictício com o widget da SENTRIA incorporado">
+            <MessageCircle size={18} strokeWidth={1.75} />
+            Demo do widget
+          </a>
           <a className="nav-link" href="/portal" target="_blank" rel="noreferrer">
             <ExternalLink size={18} strokeWidth={1.75} />
             Portal do cliente

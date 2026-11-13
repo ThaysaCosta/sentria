@@ -23,6 +23,7 @@ interface DetailData {
     matrix: number[][];
     perCategory: { key: CategoryKey; label: string; precision: number | null; recall: number | null; f1: number | null; support: number }[];
     confidence: { range: string; count: number; accuracy: number | null }[];
+    replies: { total: number; usedSuggestion: number | null; verbatim: number | null; editedBeforeSending: number | null };
   };
   customers: { id: number; name: string; plan: string | null; tickets: number; negativeShare: number; churnRisk: number }[];
 }
@@ -68,10 +69,10 @@ export function Analytics() {
             </div>
             <div className="card-body" style={{ height: 300 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data.daily} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+                <BarChart data={data.daily} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                   <CartesianGrid vertical={false} stroke="#E4E9F1" />
                   <XAxis dataKey="date" {...axisProps} tickFormatter={fmtShortDate} minTickGap={20} />
-                  <YAxis {...axisProps} width={44} />
+                  <YAxis {...axisProps} width={36} />
                   <Tooltip cursor={{ fill: 'rgb(57 120 213 / 0.06)' }} content={(p) => <ChartTooltip {...p} formatLabel={fmtShortDate} />} />
                   {CATEGORY_KEYS.map((k, i) => (
                     <Bar key={k} dataKey={k} name={CATEGORY_SHORT[k]} stackId="a" fill={CATEGORY_COLOR[k]} radius={i === CATEGORY_KEYS.length - 1 ? [3, 3, 0, 0] : 0} />
@@ -245,6 +246,21 @@ export function Analytics() {
                     ))}
                   </tbody>
                 </table>
+                <div className="grid grid-3" style={{ gap: 10 }}>
+                  <div className="card card-pad" style={{ boxShadow: 'none' }}>
+                    <div className="label">Respostas com sugestão da IA</div>
+                    <div className="num" style={{ fontSize: 22, fontWeight: 600, color: 'var(--sn-lavender-ink)' }}>{fmtPct(data.ai.replies.usedSuggestion, 0)}</div>
+                  </div>
+                  <div className="card card-pad" style={{ boxShadow: 'none' }}>
+                    <div className="label">Enviadas sem editar</div>
+                    <div className="num" style={{ fontSize: 22, fontWeight: 600 }}>{fmtPct(data.ai.replies.verbatim, 0)}</div>
+                  </div>
+                  <div className="card card-pad" style={{ boxShadow: 'none' }}>
+                    <div className="label">Respostas analisadas</div>
+                    <div className="num" style={{ fontSize: 22, fontWeight: 600 }}>{fmtNumber(data.ai.replies.total)}</div>
+                  </div>
+                </div>
+                <p className="tiny muted" style={{ marginTop: -4 }}>Taxa de aceitação: mede se as respostas sugeridas são úteis na prática. Quando o atendente edita antes de enviar ({fmtPct(data.ai.replies.editedBeforeSending, 0)} dos casos), há espaço para melhorar a sugestão.</p>
                 <div>
                   <div className="label" style={{ marginBottom: 6 }}>Calibração: acerto por faixa de confiança</div>
                   <div className="row wrap" style={{ gap: 8 }}>

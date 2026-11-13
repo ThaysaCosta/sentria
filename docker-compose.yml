@@ -1,0 +1,16 @@
+services:
+  sentria:
+    build: .
+    ports:
+      - "3333:3333"
+    environment:
+      # Opcional: ative o Claude preenchendo no arquivo .env
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      CLAUDE_MODEL: ${CLAUDE_MODEL:-claude-opus-5-5}
+      JWT_SECRET: ${JWT_SECRET:-troque-este-segredo}
+    volumes:
+      - sentria-data:/data
+    restart: unless-stopped
+
+volumes:
+  sentria-data:

@@ -295,13 +295,60 @@ ticketsRouter.post('/:id/messages', (req, res) => {
         now,
         id,
       );
-      addEvent(id, 'reply', req.user!.name, { usedSuggestion: Boolean(body.usedSuggestion) });
+      // Taxa de aceitação da IA: usou a sugestão? Enviou sem editar?
+      const usedSuggestion = Boolean(body.usedSuggestion);
+      const verbatim = usedSuggestion && normalizeText(body.body) === normalizeText(t.ai_reply ?? '');
+      addEvent(id, 'reply', req.user!.name, { usedSuggestion, verbatim });
       if (next !== t.status) addEvent(id, 'status_changed', req.user!.name, { from: t.status, to: next });
     } else {
       addEvent(id, 'note', req.user!.name, null);
     }
   });
   res.status(201).json({ ok: true });
+});
+
+const normalizeText = (s: string) => s.replace(/\s+/g, ' ').trim();
+
+const BulkReply = z.object({
+  ids: z.array(z.number().int().positive()).min(1).max(300),
+  body: z.string().trim().min(10, 'Escreva a mensagem.').max(10000),
+  status: z.enum(STATUSES).optional(),
+});
+
+/**
+ * Resposta em massa (ex.: comunicado de incidente para todos os tickets de um pico).
+ * "{{nome}}" no texto é trocado pelo primeiro nome de cada solicitante.
+ */
+ticketsRouter.post('/bulk-reply', (req, res) => {
+  const { ids, body, status } = BulkReply.parse(req.body);
+  const now = nowIso();
+  let sent = 0;
+  tx(() => {
+    for (const id of ids) {
+      const t = findTicket(id);
+      if (!t) continue;
+      const text = body.replace(/\{\{\s*nome\s*\}\}/gi, t.requester_name.split(' ')[0]);
+      addMessage(id, 'agent', req.user!.name, text, false, now);
+      const next = status ?? (t.status === 'new' ? 'in_progress' : t.status);
+      const resolving = next === 'resolved' || next === 'closed';
+      run(
+        `UPDATE tickets SET first_response_at = COALESCE(first_response_at, ?), status = ?, assignee_id = COALESCE(assignee_id, ?),
+           resolved_at = CASE WHEN ? THEN COALESCE(resolved_at, ?) ELSE NULL END, updated_at = ? WHERE id = ?`,
+        now,
+        next,
+        req.user!.id,
+        resolving ? 1 : 0,
+        now,
+        now,
+        id,
+      );
+      addEvent(id, 'reply', req.user!.name, { bulk: true, count: ids.length });
+      if (next !== t.status) addEvent(id, 'status_changed', req.user!.name, { from: t.status, to: next });
+      sent++;
+    }
+  });
+  ai.invalidateTickets();
+  res.json({ sent });
 });
 
 ticketsRouter.post('/:id/reanalyze', async (req, res) => {

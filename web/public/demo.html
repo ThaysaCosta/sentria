@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faturas · Kairo ERP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, 'Segoe UI', system-ui, sans-serif; background: #f4f6f4; color: #1f2a24; font-size: 14px; }
+    .demo-bar { background: #14243B; color: #dfe7f4; padding: 10px 20px; font-size: 13px; display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; text-align: center; }
+    .demo-bar strong { color: #fff; }
+    .demo-bar a { color: #9fc2f5; font-weight: 600; }
+    .app { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 40px); }
+    aside { background: #fff; border-right: 1px solid #e3e8e4; padding: 18px 12px; }
+    .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 17px; padding: 0 8px 18px; color: #0f5132; }
+    .logo i { width: 26px; height: 26px; border-radius: 7px; background: linear-gradient(135deg, #198754, #20c997); display: inline-block; }
+    nav a { display: block; padding: 8px 10px; border-radius: 8px; color: #3d4a43; text-decoration: none; font-weight: 500; margin-bottom: 2px; }
+    nav a:hover { background: #eef3ef; }
+    nav a.active { background: #e3f2ea; color: #0f5132; font-weight: 600; }
+    nav .sec { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #8a978f; padding: 14px 10px 6px; font-weight: 600; }
+    main { padding: 26px 32px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+    h1 { margin: 0; font-size: 22px; }
+    .crumbs { color: #8a978f; font-size: 12.5px; margin-bottom: 4px; }
+    .user { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #3d4a43; }
+    .user b { width: 30px; height: 30px; border-radius: 50%; background: #198754; color: #fff; display: grid; place-items: center; font-size: 12px; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+    .card { background: #fff; border: 1px solid #e3e8e4; border-radius: 12px; padding: 16px; }
+    .card .l { font-size: 12px; color: #6b7a71; font-weight: 600; }
+    .card .v { font-size: 22px; font-weight: 700; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e3e8e4; border-radius: 12px; overflow: hidden; }
+    th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid #eef1ee; }
+    th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: #6b7a71; background: #fafbfa; }
+    .pill { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
+    .open { background: #fff4e0; color: #9a6512; } .paid { background: #e3f6ef; color: #0f7d5d; }
+    button.primary { background: #198754; color: #fff; border: none; border-radius: 8px; padding: 8px 12px; font-weight: 600; cursor: pointer; font-size: 13px; }
+    button.primary:hover { background: #157347; }
+    button.primary:disabled { opacity: .6; cursor: wait; }
+    .toast { position: fixed; left: 50%; top: 56px; transform: translateX(-50%); background: #fbe9ea; color: #9f2b35; border: 1px solid #f2cdd0; padding: 10px 16px; border-radius: 10px; font-weight: 500; display: none; box-shadow: 0 10px 24px -10px rgba(0,0,0,.2); z-index: 10; }
+    .toast.show { display: block; }
+    .hint { margin-top: 18px; padding: 14px 16px; border: 1px dashed #b7c9e8; background: #f6f9ff; border-radius: 12px; color: #334155; font-size: 13px; line-height: 1.6; }
+    .view { display: none; } .view.active { display: block; }
+    @media (max-width: 800px) { .app { grid-template-columns: 1fr; } aside { display: none; } .cards { grid-template-columns: 1fr; } main { padding: 18px; } }
+  </style>
+</head>
+<body>
+  <div class="demo-bar">
+    <span><strong>Ambiente de demonstração.</strong> O Kairo ERP é um sistema fictício com o widget da SENTRIA incorporado (balão no canto inferior direito).</span>
+    <a href="/" target="_blank">Abrir o painel da SENTRIA →</a>
+  </div>
+
+  <div class="app">
+    <aside>
+      <div class="logo"><i></i> Kairo ERP</div>
+      <nav>
+        <a href="#/dashboard" data-v="dashboard">Dashboard</a>
+        <div class="sec">Financeiro</div>
+        <a href="#/financeiro/faturas" data-v="faturas">Faturas</a>
+        <a href="#/financeiro/assinatura" data-v="assinatura">Assinatura e plano</a>
+        <div class="sec">Cadastros</div>
+        <a href="#/cadastros/clientes" data-v="clientes">Clientes</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header>
+        <div>
+          <div class="crumbs" id="crumbs">Financeiro › Faturas</div>
+          <h1 id="title">Faturas</h1>
+        </div>
+        <div class="user"><b>PR</b> Paula Reis · Lumen Tech</div>
+      </header>
+
+      <section class="view" data-view="faturas">
+        <div class="cards">
+          <div class="card"><div class="l">Em aberto</div><div class="v">R$ 4.980,00</div></div>
+          <div class="card"><div class="l">Vence em 7 dias</div><div class="v">R$ 2.490,00</div></div>
+          <div class="card"><div class="l">Pagas no mês</div><div class="v">R$ 7.470,00</div></div>
+        </div>
+        <table>
+          <thead><tr><th>Fatura</th><th>Competência</th><th>Valor</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>#2026-1187</td><td>Novembro/2026</td><td>R$ 2.490,00</td><td><span class="pill open">Em aberto</span></td><td><button class="primary boleto">Gerar boleto</button></td></tr>
+            <tr><td>#2026-1186</td><td>Outubro/2026</td><td>R$ 2.490,00</td><td><span class="pill open">Em aberto</span></td><td><button class="primary boleto">Gerar boleto</button></td></tr>
+            <tr><td>#2026-1185</td><td>Setembro/2026</td><td>R$ 2.490,00</td><td><span class="pill paid">Paga</span></td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="hint">
+          <strong>Roteiro da demonstração:</strong> clique em <em>Gerar boleto</em>. A requisição falha (erro 500, de propósito), a SENTRIA percebe e oferece ajuda já com o erro, a tela e as últimas ações anexadas.
+          Depois abra o painel da SENTRIA e veja o chamado chegar analisado pela IA.
+        </div>
+      </section>
+
+      <section class="view" data-view="dashboard">
+        <div class="cards">
+          <div class="card"><div class="l">Vendas no mês</div><div class="v">R$ 128.430</div></div>
+          <div class="card"><div class="l">Pedidos</div><div class="v">342</div></div>
+          <div class="card"><div class="l">Clientes ativos</div><div class="v">1.204</div></div>
+        </div>
+        <div class="hint">Vá em <a href="#/financeiro/faturas">Financeiro › Faturas</a> para simular o erro, ou clique no balão para abrir um chamado manualmente.</div>
+      </section>
+
+      <section class="view" data-view="assinatura">
+        <div class="card"><div class="l">Plano atual</div><div class="v">Pro · R$ 2.490/mês</div><p style="color:#6b7a71">Renovação automática em 05/12/2026.</p></div>
+      </section>
+
+      <section class="view" data-view="clientes">
+        <table>
+          <thead><tr><th>Cliente</th><th>Cidade</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Mercado Bom Preço</td><td>Florianópolis/SC</td><td><span class="pill paid">Ativo</span></td></tr>
+            <tr><td>Padaria Estrela</td><td>São José/SC</td><td><span class="pill paid">Ativo</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Widget da SENTRIA: uma linha para incorporar em qualquer sistema -->
+  <script src="/widget.js" data-app="Kairo ERP" data-version="4.2" defer></script>
+  <script>
+    const VIEWS = {
+      dashboard: { title: 'Dashboard', crumbs: 'Início' },
+      faturas: { title: 'Faturas', crumbs: 'Financeiro › Faturas' },
+      assinatura: { title: 'Assinatura e plano', crumbs: 'Financeiro › Assinatura' },
+      clientes: { title: 'Clientes', crumbs: 'Cadastros › Clientes' },
+    };
+    const ROUTES = { '#/dashboard': 'dashboard', '#/financeiro/faturas': 'faturas', '#/financeiro/assinatura': 'assinatura', '#/cadastros/clientes': 'clientes' };
+
+    function route() {
+      const v = ROUTES[location.hash] || 'faturas';
+      document.querySelectorAll('.view').forEach((el) => el.classList.toggle('active', el.dataset.view === v));
+      document.querySelectorAll('nav a').forEach((a) => a.classList.toggle('active', a.dataset.v === v));
+      document.getElementById('title').textContent = VIEWS[v].title;
+      document.getElementById('crumbs').textContent = VIEWS[v].crumbs;
+      document.title = VIEWS[v].title + ' · Kairo ERP';
+    }
+    window.addEventListener('hashchange', route);
+    route();
+
+    // O sistema informa à SENTRIA quem é o usuário logado (não precisa preencher nome e e-mail).
+    window.addEventListener('load', () => {
+      window.Sentria?.identify({ name: 'Paula Reis', email: 'paula.reis@lumentech.com.br', company: 'Lumen Tech', plan: 'Pro' });
+    });
+
+    const toast = document.getElementById('toast');
+    document.querySelectorAll('button.boleto').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        btn.textContent = 'Gerando…';
+        try {
+          const res = await fetch('/api/demo/boletos', { method: 'POST' });
+          if (!res.ok) {
+            const body = await res.json().catch(() => ({}));
+            toast.textContent = body.error || 'Não foi possível gerar o boleto.';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+          }
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Gerar boleto';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

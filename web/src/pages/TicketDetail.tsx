@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { TechContext } from '../components/TechContext';
 import { AiLabel, AiMark, CategoryChip, Confidence, Empty, PriorityBadge, RiskMeter, Skeleton, StatusBadge, useToast } from '../components/ui';
 import { api } from '../lib/api';
 import {
@@ -262,6 +263,8 @@ export function TicketDetail() {
               </div>
             </div>
           </section>
+
+          {t.context && <TechContext context={t.context} />}
 
           {/* ---------------- Conversa */}
           <section className="thread" aria-label="Conversa">

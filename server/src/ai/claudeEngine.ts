@@ -72,7 +72,10 @@ Solicitante: ${input.requesterName ?? 'não informado'}
 Empresa: ${input.customerName ?? 'não informada'} · Plano: ${input.customerPlan ?? 'não informado'}
 Chamados da empresa nos últimos 7 dias: ${input.customerRecentTickets ?? 0}
 Versão do produto: ${input.productVersion ?? 'não informada'}
-
+${input.technicalContext ? `
+Contexto técnico capturado automaticamente pelo widget:
+${input.technicalContext}
+` : ''}
 Descrição:
 ${input.description}
 </chamado>

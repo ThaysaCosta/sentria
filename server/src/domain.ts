@@ -37,7 +37,7 @@ export const STATUSES = ['new', 'in_progress', 'waiting', 'resolved', 'closed'] 
 export type Status = (typeof STATUSES)[number];
 export const OPEN_STATUSES: Status[] = ['new', 'in_progress', 'waiting'];
 
-export const CHANNELS = ['email', 'portal', 'chat', 'phone', 'whatsapp'] as const;
+export const CHANNELS = ['widget', 'email', 'portal', 'chat', 'phone', 'whatsapp'] as const;
 export type Channel = (typeof CHANNELS)[number];
 
 export const SENTIMENTS = ['negative', 'neutral', 'positive'] as const;

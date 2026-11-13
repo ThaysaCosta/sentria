@@ -1,6 +1,7 @@
 import { Router, type NextFunction, type Request, type Response } from 'express';
 import { z } from 'zod';
 import { ai } from '../ai/index.js';
+import { TicketContextSchema } from '../context.js';
 import { all, get, nowIso, run, tx } from '../db/database.js';
 import { CATEGORIES } from '../domain.js';
 import { addEvent, addMessage, createTicket, findTicketByProtocol } from '../services/tickets.js';
@@ -52,6 +53,7 @@ const OpenTicket = z.object({
   description: z.string().trim().min(10, 'Descreva o problema com um pouco mais de detalhe.').max(10000),
   resolvedBySuggestion: z.boolean().optional(),
   articleId: z.number().int().positive().optional(),
+  context: TicketContextSchema.optional(),
 });
 
 publicRouter.post('/tickets', rateLimit(15, 10 * 60_000), async (req, res) => {
@@ -62,8 +64,9 @@ publicRouter.post('/tickets', rateLimit(15, 10 * 60_000), async (req, res) => {
     requesterName: body.name,
     requesterEmail: body.email,
     companyName: body.company || null,
-    channel: 'portal',
+    channel: body.context?.source === 'widget' ? 'widget' : 'portal',
     origin: 'portal',
+    context: body.context ?? null,
     status: body.resolvedBySuggestion ? 'resolved' : 'new',
     resolvedByAi: body.resolvedBySuggestion,
     // Chamados resolvidos pelo autoatendimento não precisam de análise com o Claude.

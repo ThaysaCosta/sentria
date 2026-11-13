@@ -72,7 +72,10 @@ class AiService {
   }
 
   suggestArticles(text: string, k = 3): KbRef[] {
-    return this.kbIndex.search(text, k, { minScore: 0.08 }).map((r) => ({
+    const hits = this.kbIndex.search(text, k, { minScore: 0.08 });
+    // Mantém só artigos com relevância próxima do melhor resultado (evita sugestões "de enfeite").
+    const top = hits[0]?.score ?? 0;
+    return hits.filter((r) => r.score >= top * 0.55).map((r) => ({
       id: r.id,
       title: r.meta.title,
       category: r.meta.category,
